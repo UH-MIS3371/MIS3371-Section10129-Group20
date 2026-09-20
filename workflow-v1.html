@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Transaction Workflow: Patient Referral</title>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; max-width: 780px; margin: 40px auto; padding: 0 20px; color: #111; line-height: 1.5; }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  .meta { color: #555; font-size: 14px; margin-bottom: 28px; }
+  h2 { font-size: 20px; margin-top: 34px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  p { font-size: 16px; }
+  .step { border: 1px solid #333; padding: 12px 16px; margin: 0 auto; max-width: 620px; }
+  .step .n { font-weight: bold; }
+  .arrow { text-align: center; font-size: 20px; margin: 4px 0; }
+  .exception { border: 1px dashed #999; margin: 6px auto 6px 60px; max-width: 560px; padding: 8px 14px; font-size: 14px; color: #333; }
+  .exception .label { font-weight: bold; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #555; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 14px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+</style>
+</head>
+<body>
+
+<h1>Transaction Workflow: Submit a Patient Referral</h1>
+<p class="meta">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+
+<p>A referring provider submits a referral for a patient to receive a specific service. The system checks the referral, routes it to the right department, and tracks it until the patient is scheduled or the referral is closed.</p>
+
+<h2>Workflow diagram</h2>
+
+<div class="step"><span class="n">1.</span> Referring provider submits a referral (patient ID, reason, requested service, urgency).</div>
+<div class="arrow">↓</div>
+
+<div class="step"><span class="n">2.</span> System checks that all required fields are present.</div>
+<div class="exception"><span class="label">Exception path</span><br>A field is missing → status becomes Incomplete, and the referral is returned to the provider with the missing fields listed.</div>
+<div class="arrow">↓</div>
+
+<div class="step"><span class="n">3.</span> System checks for an existing active referral for the same patient and service.</div>
+<div class="exception"><span class="label">Exception path</span><br>A duplicate is found → the submission is blocked and the existing referral ID is shown to the provider.</div>
+<div class="arrow">↓</div>
+
+<div class="step"><span class="n">4.</span> System assigns a referral ID and sets the status to Submitted.</div>
+<div class="arrow">↓</div>
+
+<div class="step"><span class="n">5.</span> System routes the referral to the department that offers the requested service; status becomes Under Review.</div>
+<div class="arrow">↓</div>
+
+<div class="step"><span class="n">6.</span> Receiving department reviews the referral and makes a decision.</div>
+<div class="exception"><span class="label">Branches</span><br>
+Accept → status becomes Accepted.<br>
+Reject with a reason → status becomes Rejected (exception path).<br>
+Request more information → status becomes Incomplete and returns to the provider (exception path).</div>
+<div class="arrow">↓</div>
+
+<div class="step"><span class="n">7.</span> Scheduling staff mark the referral Scheduled, then Completed once the patient receives the service.</div>
+
+<h2>Workflow worksheet</h2>
+<table>
+<tr><th>#</th><th>Actor</th><th>Action</th><th>Decision / condition</th><th>Outcome / next step</th></tr>
+<tr><td>1</td><td>Referring Provider</td><td>Submits a referral with patient ID, reason, requested service, and urgency.</td><td>N/A</td><td>Request logged; status = Submitted (pending validation).</td></tr>
+<tr><td>2</td><td>System</td><td>Checks required fields.</td><td>Are patient ID, reason, requested service, and urgency all present?</td><td>Yes → continue. No → Incomplete, returned to provider (exception).</td></tr>
+<tr><td>3</td><td>System</td><td>Checks for a duplicate active referral.</td><td>Is there already an open referral for this patient and service?</td><td>Yes → blocked, existing ID shown (exception). No → continue.</td></tr>
+<tr><td>4</td><td>System</td><td>Routes the referral to the matching department.</td><td>Which department offers the requested service?</td><td>Status = Under Review.</td></tr>
+<tr><td>5</td><td>Receiving Department Staff</td><td>Reviews the referral.</td><td>Accept, reject, or request more information?</td><td>Accepted / Rejected (reason required) / Incomplete (exception).</td></tr>
+<tr><td>6</td><td>Scheduling Staff</td><td>Books the patient for the accepted service.</td><td>N/A</td><td>Status = Scheduled.</td></tr>
+<tr><td>7</td><td>Scheduling Staff</td><td>Marks the referral complete after the visit.</td><td>N/A</td><td>Status = Completed (final).</td></tr>
+</table>
+
+</body>
+</html>

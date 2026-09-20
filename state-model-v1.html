@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>State Model: Patient Referral</title>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; max-width: 780px; margin: 40px auto; padding: 0 20px; color: #111; line-height: 1.5; }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  .meta { color: #555; font-size: 14px; margin-bottom: 28px; }
+  h2 { font-size: 20px; margin-top: 34px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  p { font-size: 16px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 14px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+  .diagram { text-align: center; margin: 20px 0; }
+  .row { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin: 10px 0; }
+  .box { border: 1px solid #333; padding: 8px 14px; font-size: 14px; }
+  .box.final { border-width: 2px; }
+  .box.branch { border-style: dashed; color: #444; }
+  .arrowh { font-size: 18px; }
+  .down { text-align: center; font-size: 18px; margin: 2px 0; }
+</style>
+</head>
+<body>
+
+<h1>State Transition Diagram: Patient Referral</h1>
+<p class="meta">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+
+<h2>Diagram</h2>
+<div class="diagram">
+  <div class="row">
+    <div class="box">Submitted</div>
+    <div class="arrowh">→</div>
+    <div class="box">Under Review</div>
+    <div class="arrowh">→</div>
+    <div class="box">Accepted</div>
+    <div class="arrowh">→</div>
+    <div class="box">Scheduled</div>
+    <div class="arrowh">→</div>
+    <div class="box final">Completed</div>
+  </div>
+  <div class="row">
+    <div class="down">↓</div>
+    <div class="down">↓ ↘</div>
+  </div>
+  <div class="row">
+    <div class="box branch">Incomplete<br><span style="font-size:12px">returns to provider</span></div>
+    <div class="box branch">Rejected<br><span style="font-size:12px">reason recorded</span></div>
+  </div>
+  <p style="font-size:13px; color:#555; margin-top:16px;">Cancelled is reachable from any non-final state (Submitted, Under Review, Incomplete, or Accepted) when the provider or coordinator withdraws the referral with a reason. Rejected, Cancelled, and Completed are final states.</p>
+</div>
+
+<h2>State definitions</h2>
+<table>
+<tr><th>State</th><th>Meaning</th><th>Set by</th></tr>
+<tr><td>Submitted</td><td>Referral passed field validation and the duplicate check, and received a referral ID.</td><td>System</td></tr>
+<tr><td>Incomplete</td><td>Missing required information, or the receiving department asked for more information; returned to the provider.</td><td>System / Receiving Department</td></tr>
+<tr><td>Under Review</td><td>Routed to the receiving department and waiting on a decision.</td><td>System</td></tr>
+<tr><td>Accepted</td><td>Receiving department approved the referral for scheduling.</td><td>Receiving Department</td></tr>
+<tr><td>Rejected</td><td>Receiving department declined the referral; a reason is recorded and visible to the provider. Final.</td><td>Receiving Department</td></tr>
+<tr><td>Scheduled</td><td>Patient has an appointment booked for the service.</td><td>Scheduling Staff</td></tr>
+<tr><td>Completed</td><td>Patient received the service; the referral is closed. Final.</td><td>Scheduling Staff</td></tr>
+<tr><td>Cancelled</td><td>Withdrawn by the provider or coordinator before completion, with a reason recorded. Final.</td><td>Referring Provider / Referral Coordinator</td></tr>
+</table>
+
+<h2>Allowed transitions</h2>
+<table>
+<tr><th>From</th><th>To</th><th>When</th></tr>
+<tr><td>(new)</td><td>Submitted</td><td>Required fields present and no duplicate active referral.</td></tr>
+<tr><td>(new)</td><td>Incomplete</td><td>A required field is missing.</td></tr>
+<tr><td>Incomplete</td><td>Submitted</td><td>Provider corrects and resubmits.</td></tr>
+<tr><td>Submitted</td><td>Under Review</td><td>System routes the referral to the matching department.</td></tr>
+<tr><td>Under Review</td><td>Accepted</td><td>Department accepts the referral.</td></tr>
+<tr><td>Under Review</td><td>Rejected</td><td>Department rejects with a reason.</td></tr>
+<tr><td>Under Review</td><td>Incomplete</td><td>Department requests more information.</td></tr>
+<tr><td>Accepted</td><td>Scheduled</td><td>Scheduling staff book the patient.</td></tr>
+<tr><td>Scheduled</td><td>Completed</td><td>Patient receives the service.</td></tr>
+<tr><td>Submitted / Under Review / Incomplete / Accepted</td><td>Cancelled</td><td>Provider or coordinator withdraws the referral with a reason, any time before Completed.</td></tr>
+</table>
+
+</body>
+</html>
