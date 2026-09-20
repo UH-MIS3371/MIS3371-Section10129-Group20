@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Three-Tier Architecture: Patient Referral</title>
+<style>
+  body { font-family: Georgia, 'Times New Roman', serif; max-width: 820px; margin: 40px auto; padding: 0 20px; color: #111; line-height: 1.5; }
+  h1 { font-size: 28px; margin-bottom: 4px; }
+  .meta { color: #555; font-size: 14px; margin-bottom: 28px; }
+  h2 { font-size: 20px; margin-top: 34px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  p { font-size: 16px; }
+  .tiers { display: flex; gap: 14px; margin-top: 16px; flex-wrap: wrap; }
+  .tier { flex: 1; min-width: 220px; border: 1px solid #333; padding: 14px 16px; }
+  .tier h3 { margin-top: 0; font-size: 16px; border-bottom: 1px solid #ccc; padding-bottom: 6px; }
+  .tier ul { padding-left: 18px; font-size: 14px; margin: 0; }
+  .tier li { margin-bottom: 6px; }
+  .arrowrow { text-align: center; font-size: 20px; color: #555; margin: -6px 0 6px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 14px; }
+  th, td { border: 1px solid #999; padding: 6px 10px; text-align: left; vertical-align: top; }
+  th { background: #eee; }
+</style>
+</head>
+<body>
+
+<h1>Three-Tier Architecture: Patient Referral</h1>
+<p class="meta">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+
+<h2>Diagram</h2>
+<div class="tiers">
+  <div class="tier">
+    <h3>Presentation</h3>
+    <ul>
+      <li>Referral form for the referring provider</li>
+      <li>Review queue for receiving department staff</li>
+      <li>Status lookup for the referral coordinator</li>
+      <li>Basic client-side checks: required fields present, a service selected</li>
+      <li>Displays confirmation, current status, and decision reasons back to the user</li>
+    </ul>
+  </div>
+  <div class="tier">
+    <h3>Application logic</h3>
+    <ul>
+      <li>Re-validates required fields and the duplicate check server-side</li>
+      <li>Routes the referral to the department that offers the requested service</li>
+      <li>Enforces the allowed state transition list</li>
+      <li>Assigns the referral ID on creation</li>
+      <li>Computes the overdue flag against the review-time threshold</li>
+      <li>Enforces role-based permissions (who can accept, reject, schedule, or cancel)</li>
+    </ul>
+  </div>
+  <div class="tier">
+    <h3>Data</h3>
+    <ul>
+      <li>Stores the referral record as the official system of record</li>
+      <li>Stores department and service routing rules</li>
+      <li>Logs every status change (old state, new state, who, timestamp) in an immutable history table</li>
+      <li>Persists submitted_at, updated_at, and all decision reasons</li>
+    </ul>
+  </div>
+</div>
+
+<h2>Responsibility notes</h2>
+<table>
+<tr><th>Responsibility</th><th>Tier</th><th>Note</th></tr>
+<tr><td>Collect input / immediate feedback</td><td>Presentation</td><td>The form checks that fields are filled in, but this check is a convenience, not the source of truth.</td></tr>
+<tr><td>Critical validation</td><td>Application logic</td><td>Required-field and duplicate-referral checks run again on the server. A request sent directly to the API, bypassing the form, is checked the same way.</td></tr>
+<tr><td>Business rules</td><td>Application logic</td><td>Department routing and the allowed state transitions are enforced here, not in the browser. This is the one rule that must stay authoritative on the server: nothing on the client can move a referral to Accepted, Scheduled, or Completed directly.</td></tr>
+<tr><td>Audit / history</td><td>Data</td><td>Every status change is written to a history table that the application layer can append to but never edit or delete. That immutability is the audit requirement this design depends on.</td></tr>
+<tr><td>Persist official record</td><td>Data</td><td>The database, not the browser session or the application server's memory, is the record that survives a restart.</td></tr>
+</table>
+
+<h2>Exception / failure path</h2>
+<p>If the application server enforced the state transition rules only through the UI and a request came in through a script that skipped the review step, an unreviewed referral could reach Scheduled. The application layer rejects any transition that isn't on the allowed list, regardless of where the request came from, and logs the rejected attempt.</p>
+
+</body>
+</html>
