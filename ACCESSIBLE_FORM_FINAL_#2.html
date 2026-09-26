@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+    WEEK 4 — SESSION 2 LIVE DEMO
+    Goal: turn the semantic page from Session 1 into an accessible transaction form.
+
+    Teaching focus:
+    1. <form>
+    2. <label> + for/id connection
+    3. id vs name
+    4. Appropriate control types
+    5. <fieldset> + <legend>
+    6. Native HTML constraints
+    7. Accessibility
+    8. Validation vs business rules
+  -->
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Patient Referral</title>
+</head>
+
+<body>
+
+  <header>
+    <h1>Submit a Patient Referral</h1>
+    <p>Complete the form below to submit a patient referral.</p>
+    <p>Submit one patient referral to a requested service.</p>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>Before You Submit</h2>
+      <p>
+        Complete the required fields below.
+        Use fictional patient information only for this demonstration.
+      </p>
+    </section>
+
+    <section>
+      <h2>Referral Details</h2>
+
+      <!--
+        <form> groups the controls that participate in one submission.
+
+        method="get" is used only for this classroom demo.
+        After a valid submission, notice that the field NAMES appear
+        in the browser URL as submitted data.
+
+        In the real capstone, submission will later go through
+        JavaScript/API/backend logic.
+      -->
+      <form method="get">
+
+        <!--
+          <fieldset> groups related controls.
+          <legend> gives the group a meaningful name.
+        -->
+        <fieldset>
+
+          <legend>Referral Information</legend>
+
+          <!-- =====================================================
+               PATIENT ID
+               ===================================================== -->
+
+          <!--
+            for="patientId" must match id="patientId".
+            This connects the visible label to the input.
+          -->
+          <label for="patientId">Patient ID</label>
+          <!--for connect the label to input id-->
+          <input
+            id="patientId"
+            name="patientId"
+            type="text"
+            required
+          >
+
+          <br><br>
+
+          <!-- =====================================================
+               REFERRAL PROVIDER
+               ===================================================== -->
+
+          <label for="referringProvider">Referral Provider</label>
+
+          <input
+            id="referringProvider"
+            name="referringProvider"
+            type="text"
+            required
+          >
+
+          <br><br>
+
+          <!-- =====================================================
+               REQUESTED SERVICE
+               ===================================================== -->
+
+          <label for="requestService">Requested Service</label>
+
+          <!--
+            <select> is appropriate because the business allows
+            a known set of services.
+
+            BUSINESS RULE FOR LATER:
+            The referral is routed only to the department that
+            offers the selected service.
+          -->
+          <select
+            id="requestService"
+            name="requestService"
+            required
+          >
+            <option value="">Choose a service</option>
+            <option value="cardiology">Cardiology</option>
+            <option value="dermatology">Dermatology</option>
+            <option value="orthopedics">Orthopedics</option>
+            <option value="physicaltherapy">Physical Therapy</option>
+            <option value="other">Other</option>
+          </select>
+
+          <br><br>
+
+          <!-- =====================================================
+               URGENCY
+               ===================================================== -->
+
+          <label for="urgency">Urgency</label>
+
+          <!--
+            <select> is appropriate because the business allows
+            a known set of urgency levels.
+
+            BUSINESS RULE FOR LATER:
+            An urgent referral under review for more than 1 business
+            day is overdue. A routine referral is overdue after 3
+            business days.
+          -->
+          <select
+            id="urgency"
+            name="urgency"
+            required
+          >
+            <option value="">Choose an urgency level</option>
+            <option value="urgent">Urgent</option>
+            <option value="routine">Routine</option>
+          </select>
+
+          <br><br>
+
+          <!-- =====================================================
+               REASON FOR REFERRAL
+               ===================================================== -->
+
+          <label for="referralReason">Reason for Referral</label>
+          <br>
+
+          <textarea
+            id="referralReason"
+            name="referralReason"
+            rows="4"
+            cols="45"
+            required
+          ></textarea>
+
+          <!-- =====================================================
+               ADDITIONAL BUSINESS RULES
+               ===================================================== -->
+
+          <!--
+            BUSINESS RULES FOR LATER:
+
+            Patient ID, reason, requested service, urgency, and
+            referring provider are required to submit a referral.
+
+            A patient cannot have two active referrals for the same
+            service.
+
+            Missing information or a request for more information
+            makes the referral Incomplete until the provider resubmits.
+
+            A referral cannot be rejected without a reason that is
+            visible to the provider.
+
+            A referral must be Accepted before it can be Scheduled.
+            It must be Scheduled before it can be Completed.
+
+            Only authorized referral staff may cancel an active
+            referral. A cancellation reason is required, and a
+            Completed referral cannot be canceled.
+
+            Basic HTML cannot express these workflow rules by itself.
+            JavaScript and server/application logic will handle them later.
+          -->
+
+        </fieldset>
+
+        <br>
+
+        <!--
+          type="submit" asks the browser to submit the form.
+
+          Before submission, the browser checks the native constraints.
+          Try:
+          - leaving a required field empty
+          - choosing a service
+          - choosing an urgency level
+        -->
+        <button type="submit">
+          Submit Referral
+        </button>
+
+      </form>
+
+    </section>
+
+  </main>
+
+  <footer>
+    <p>MIS 3371 — Week 4 Live Demo</p>
+  </footer>
+
+</body>
+</html>
