@@ -1,0 +1,181 @@
+/* ===================================================================
+   Patient Referral Form — styles.css
+   Mobile-first layout, spacing, and consistent control styling.
+   =================================================================== */
+
+/* ---------- Base / page container ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0 auto;
+  max-width: 680px;
+  padding: 1.5rem 1.25rem 3rem;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #1a1a1a;
+  background-color: #fafafa;
+}
+
+/* ---------- Heading / label hierarchy ---------- */
+
+header h1 {
+  font-size: 1.6rem;
+  margin: 0 0 0.35rem;
+}
+
+header p {
+  margin: 0 0 1.5rem;
+  color: #444;
+}
+
+section h2 {
+  font-size: 1.2rem;
+  margin: 2rem 0 0.75rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 2px solid #ccd6e0;
+  color: #1a1a1a;
+}
+
+section:first-of-type h2 {
+  margin-top: 0;
+}
+
+legend {
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 0 0.35rem;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+/* ---------- Form structure ---------- */
+
+fieldset {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin: 0 0 1.5rem;
+  background-color: #fff;
+}
+
+/* .field wraps one label + one control; replaces repeated <br><br> spacing. */
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field:last-child {
+  margin-bottom: 0;
+}
+
+/* Checkbox fields read label beside control, not stacked above it. */
+.field--checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.field--checkbox label {
+  margin-bottom: 0;
+  font-weight: 400;
+}
+
+.form-actions {
+  margin-top: 0.5rem;
+}
+
+/* ---------- Inputs, selects, textareas ---------- */
+
+input[type="text"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  border: 1px solid #999;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 6rem;
+}
+
+input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+/* ---------- Button ---------- */
+
+button[type="submit"] {
+  display: inline-block;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  font: inherit;
+  font-weight: 600;
+  color: #fff;
+  background-color: #0b5fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover {
+  background-color: #0949c7;
+}
+
+button[type="submit"]:active {
+  background-color: #073a9e;
+}
+
+/* ---------- Keyboard focus (do not remove) ---------- */
+
+input:focus,
+select:focus,
+textarea:focus,
+button:focus {
+  outline: 3px solid #0b5fff;
+  outline-offset: 2px;
+}
+
+/* ---------- Footer ---------- */
+
+footer {
+  margin-top: 2.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 600px) {
+  body {
+    padding: 1rem 1rem 2rem;
+  }
+
+  fieldset {
+    padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.4rem;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+  }
+}
