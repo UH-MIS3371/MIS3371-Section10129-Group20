@@ -20,6 +20,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit a Patient Referral</title>
   <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
 </head>
 
 <body>
@@ -151,6 +152,12 @@
             <option value="routine">Routine</option>
           </select>
 
+          <!--
+            WEEK 6: app.js reads this select on change and previews
+            BR-7's review window here, before the referral is submitted.
+          -->
+          <p id="routingMessage" aria-live="polite"></p>
+
           <br><br>
 
           <!-- =====================================================
@@ -222,7 +229,7 @@
   </main>
 
   <footer>
-    <p>MIS 3371 — Week 4 Live Demo</p>
+    <p>MIS 3371 - Patient Referral System</p>
   </footer>
 
 </body>

@@ -26,15 +26,27 @@ All demo data is fictional — no real patient information is used.
 ```
 TPS_3371_TEAM_20/
 ├── README.md
-├── Milestone1_Patient_Referral.pptx
-└── docs/
-    ├── business-problem-scope.md
-    ├── stakeholders.md
-    ├── main-transaction.md
-    ├── requirements.md
-    ├── user-stories-acceptance.md
-    ├── business-rules-states.md
-    └── team-charter.md
+├── Performance_Tracker.xlsx
+├── docs/
+│   ├── team-charter.md
+│   ├── business-problem-scope.md
+│   ├── stakeholders.md
+│   ├── main-transaction.md
+│   ├── requirements.md
+│   ├── user-stories-acceptance.md
+│   ├── business-rules-states.md
+│   └── data-dictionary.html
+├── diagrams/
+│   ├── architecture-v1.html
+│   ├── state-model-v1.html
+│   └── workflow-v1.html
+├── app/
+│   ├── index.html       (live transaction form)
+│   ├── styles.css
+│   └── app.js
+└── archive/              (superseded drafts, kept for history)
+    ├── transaction-form.html
+    └── patient-referral.html
 ```
 
 ## Git Workflow
@@ -42,4 +54,5 @@ Pull before starting · one focused branch per task · pull request with one rev
 
 ## Milestone Status
 - [x] Milestone 1 — Project definition
+- [x] Week 6: `app/app.js` added. Selecting an urgency level previews the BR-7 review window before the referral is submitted
 - [ ] Milestone 2 — Implementation begins after Milestone 1 approval
