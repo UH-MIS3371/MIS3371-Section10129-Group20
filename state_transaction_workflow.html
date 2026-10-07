@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patient Referral: State Transitions, Workflow and Worksheet</title>
+<style>
+  :root { --ink:#111; --muted:#666; --rule:#ccc; --grid:#999; --head:#eee; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f4f4f2; color:var(--ink); font-family: "DejaVu Sans Condensed", "Segoe UI", system-ui, -apple-system, Helvetica, Arial, sans-serif; }
+  .page { max-width: 880px; margin: 24px auto; padding: 36px 40px 40px; background:#fff; box-shadow: 0 1px 4px rgba(0,0,0,.12); }
+  h1 { margin:0 0 6px; font-size: 26px; line-height:1.2; }
+  .sub { margin:0 0 14px; padding-bottom:10px; border-bottom:1px solid var(--rule); font-size: 12px; color:var(--muted); }
+  svg { display:block; width:100%; height:auto; margin-top:16px; }
+  svg text { font-family: inherit; }
+  .th { font-size:14px; font-weight:700; }
+  .ts { font-size:12px; font-weight:400; fill:#5F5E5A; }
+  .lane { fill:#fff; stroke:#B4B2A9; stroke-width:.5; }
+  .lh { fill:#F1EFE8; stroke:#5F5E5A; stroke-width:.5; }
+  .lh-t { fill:#444441; }
+  .teal rect { fill:#E1F5EE; stroke:#0F6E56; }
+  .teal .th { fill:#085041; } .teal .ts { fill:#0F6E56; }
+  .coral rect { fill:#FAECE7; stroke:#993C1D; }
+  .coral .th { fill:#712B13; } .coral .ts { fill:#993C1D; }
+  .main { fill:none; stroke:#5F5E5A; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  .exc  { fill:none; stroke:#D85A30; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+  h2 { margin:26px 0 0; padding-bottom:6px; border-bottom:1px solid var(--rule); font-size:19px; }
+  h2 + table { margin-top:12px; }
+  .note { margin:14px 0 0; font-size:12.5px; line-height:1.55; color:#555; }
+  .dash { fill:none; stroke:#D85A30; stroke-width:1.5; stroke-dasharray:5 3; stroke-linecap:round; stroke-linejoin:round; }
+  .lt { font-size:12px; font-weight:700; fill:#444441; }
+  table { width:100%; border-collapse:collapse; margin-top:20px; font-size:13px; line-height:1.45; }
+  th, td { border:1px solid var(--grid); padding:8px 9px; text-align:left; vertical-align:top; }
+  th { background:var(--head); }
+  td:first-child, th:first-child { width:5%; }
+  @media (max-width: 640px) { .page { margin:0; padding:20px 14px; box-shadow:none; } table { font-size:12px; } }
+  @media print {
+    @page { size: letter; margin: 0.5in; }
+    body { background:#fff; }
+    .page { max-width:none; margin:0; padding:0; box-shadow:none; }
+    .page + .page { break-before: page; }
+    * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<section class="page">
+  <h1>State Transition Diagram: Patient Referral</h1>
+  <p class="sub">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+
+<svg viewBox="0 0 680 524" role="img" aria-labelledby="st-title st-desc">
+<title id="st-title">Patient referral state transition diagram with swim lanes</title>
+<desc id="st-desc">Submitted flows to Under Review, then Accepted, Scheduled and Completed. Under Review can also go to Incomplete or Rejected. Incomplete returns to Submitted. Cancelled is reachable from Submitted, Under Review, Incomplete and Accepted.</desc>
+<defs>
+  <marker id="sam" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="sae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+<rect class="lane" x="100" y="20" width="576" height="100"/>
+<rect class="lane" x="100" y="120" width="576" height="100"/>
+<rect class="lane" x="100" y="220" width="576" height="150"/>
+<rect class="lane" x="100" y="370" width="576" height="100"/>
+<rect class="lh" x="10" y="20" width="90" height="100"/>
+<rect class="lh" x="10" y="120" width="90" height="100"/>
+<rect class="lh" x="10" y="220" width="90" height="150"/>
+<rect class="lh" x="10" y="370" width="90" height="100"/>
+<g class="lt" text-anchor="middle" dominant-baseline="central">
+  <text x="55" y="61">Provider /</text><text x="55" y="79">coordinator</text>
+  <text x="55" y="170">System</text>
+  <text x="55" y="286">Receiving</text><text x="55" y="304">department</text>
+  <text x="55" y="411">Scheduling</text><text x="55" y="429">staff</text>
+</g>
+
+<path class="dash" d="M200 146 L200 108"/>
+<path class="dash" d="M312 232 L312 108"/>
+<path class="dash" d="M390 232 L390 108"/>
+<path class="dash" d="M266 94 L266 108"/>
+<path class="dash" d="M200 108 L602 108 L602 98" marker-end="url(#sae)"/>
+<text class="ts" x="470" y="100" text-anchor="middle" dominant-baseline="central">Withdrawn with reason</text>
+
+<path class="main" d="M116 170 L132 170" marker-end="url(#sam)"/>
+<path class="main" d="M222 170 L252 170 L252 228" marker-end="url(#sam)"/>
+<path class="main" d="M328 256 L344 256" marker-end="url(#sam)"/>
+<path class="main" d="M434 256 L496 256 L496 392" marker-end="url(#sam)"/>
+<path class="main" d="M540 420 L556 420" marker-end="url(#sam)"/>
+<path class="exc" d="M284 232 L284 98" marker-end="url(#sae)"/>
+<path class="exc" d="M284 280 L284 310" marker-end="url(#sae)"/>
+<path class="exc" d="M240 70 L160 70 L160 142" marker-end="url(#sae)"/>
+<text class="ts" x="200" y="58" text-anchor="middle" dominant-baseline="central">Resubmit</text>
+<circle cx="110" cy="170" r="6" fill="#444441"/>
+
+<g class="teal" text-anchor="middle" dominant-baseline="central">
+  <rect x="134" y="146" width="88" height="48" rx="8" stroke-width=".5"/><text class="th" x="178" y="170">Submitted</text>
+  <rect x="240" y="232" width="88" height="48" rx="8" stroke-width=".5"/><text class="th" x="284" y="247">Under</text><text class="th" x="284" y="265">Review</text>
+  <rect x="346" y="232" width="88" height="48" rx="8" stroke-width=".5"/><text class="th" x="390" y="256">Accepted</text>
+  <rect x="452" y="396" width="88" height="48" rx="8" stroke-width=".5"/><text class="th" x="496" y="420">Scheduled</text>
+  <rect x="558" y="396" width="88" height="48" rx="8" stroke-width="2"/><text class="th" x="602" y="420">Completed</text>
+</g>
+<g class="coral" text-anchor="middle" dominant-baseline="central">
+  <rect x="240" y="46" width="88" height="48" rx="8" stroke-width=".5"/><text class="th" x="284" y="70">Incomplete</text>
+  <rect x="240" y="312" width="88" height="48" rx="8" stroke-width="2"/><text class="th" x="284" y="336">Rejected</text>
+  <rect x="558" y="46" width="88" height="48" rx="8" stroke-width="2" stroke-dasharray="5 3"/><text class="th" x="602" y="70">Cancelled</text>
+</g>
+
+<g dominant-baseline="central">
+  <rect x="110" y="490" width="14" height="14" rx="3" style="fill:#E1F5EE;stroke:#0F6E56;stroke-width:.5"/><text class="ts" x="130" y="497">Main flow</text>
+  <rect x="220" y="490" width="14" height="14" rx="3" style="fill:#FAECE7;stroke:#993C1D;stroke-width:.5"/><text class="ts" x="240" y="497">Exception state</text>
+  <rect x="360" y="490" width="14" height="14" rx="3" style="fill:#fff;stroke:#5F5E5A;stroke-width:2"/><text class="ts" x="380" y="497">Final state</text>
+  <path class="dash" d="M470 497 L494 497"/><text class="ts" x="500" y="497">Cancellation path</text>
+</g>
+</svg>
+<p class="note">A new referral that is missing a required field goes straight to Incomplete. Cancelled is reachable from any non-final state (Submitted, Under Review, Incomplete, or Accepted) when the provider or coordinator withdraws the referral with a reason. Rejected, Cancelled, and Completed are final states.</p>
+</section>
+
+<section class="page">
+  <h1>State Definitions and Allowed Transitions</h1>
+  <p class="sub">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+  <h2>State definitions</h2>
+  <table>
+    <thead><tr><th style="width:16%">State</th><th style="width:54%">Meaning</th><th style="width:30%">Set by</th></tr></thead>
+    <tbody>
+      <tr><td>Submitted</td><td>Referral passed field validation and the duplicate check, and received a referral ID.</td><td>System</td></tr>
+      <tr><td>Incomplete</td><td>Missing required information, or the receiving department asked for more information; returned to the provider.</td><td>System / Receiving Department</td></tr>
+      <tr><td>Under Review</td><td>Routed to the receiving department and waiting on a decision.</td><td>System</td></tr>
+      <tr><td>Accepted</td><td>Receiving department approved the referral for scheduling.</td><td>Receiving Department</td></tr>
+      <tr><td>Rejected</td><td>Receiving department declined the referral; a reason is recorded and visible to the provider. Final.</td><td>Receiving Department</td></tr>
+      <tr><td>Scheduled</td><td>Patient has an appointment booked for the service.</td><td>Scheduling Staff</td></tr>
+      <tr><td>Completed</td><td>Patient received the service; the referral is closed. Final.</td><td>Scheduling Staff</td></tr>
+      <tr><td>Cancelled</td><td>Withdrawn by the provider or coordinator before completion, with a reason recorded. Final.</td><td>Referring Provider / Referral Coordinator</td></tr>
+    </tbody>
+  </table>
+  <h2>Allowed transitions</h2>
+  <table>
+    <thead><tr><th style="width:30%">From</th><th style="width:16%">To</th><th style="width:54%">When</th></tr></thead>
+    <tbody>
+      <tr><td>(new)</td><td>Submitted</td><td>Required fields present and no duplicate active referral.</td></tr>
+      <tr><td>(new)</td><td>Incomplete</td><td>A required field is missing.</td></tr>
+      <tr><td>Incomplete</td><td>Submitted</td><td>Provider corrects and resubmits.</td></tr>
+      <tr><td>Submitted</td><td>Under Review</td><td>System routes the referral to the matching department.</td></tr>
+      <tr><td>Under Review</td><td>Accepted</td><td>Department accepts the referral.</td></tr>
+      <tr><td>Under Review</td><td>Rejected</td><td>Department rejects with a reason.</td></tr>
+      <tr><td>Under Review</td><td>Incomplete</td><td>Department requests more information.</td></tr>
+      <tr><td>Accepted</td><td>Scheduled</td><td>Scheduling staff book the patient.</td></tr>
+      <tr><td>Scheduled</td><td>Completed</td><td>Patient receives the service.</td></tr>
+      <tr><td>Submitted / Under Review / Incomplete / Accepted</td><td>Cancelled</td><td>Provider or coordinator withdraws the referral with a reason, any time before Completed.</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section class="page">
+  <h1>Transaction Workflow: Submit a Patient Referral</h1>
+  <p class="sub">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+
+<svg viewBox="0 0 680 700" role="img" aria-labelledby="wf-title wf-desc">
+<title id="wf-title">Submit a patient referral workflow with swim lanes</title>
+<desc id="wf-desc">Four lanes: referring provider, system, receiving department, scheduling staff. The main flow runs from submitting a referral through field and duplicate checks, ID assignment, routing, review, scheduling and completion. Exception paths lead to Incomplete, Blocked and Rejected states.</desc>
+<defs>
+  <marker id="am" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#5F5E5A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+  <marker id="ae" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="#D85A30" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+</defs>
+
+<rect class="lane" x="10" y="42" width="176" height="598"/>
+<rect class="lane" x="186" y="42" width="160" height="598"/>
+<rect class="lane" x="346" y="42" width="160" height="598"/>
+<rect class="lane" x="506" y="42" width="170" height="598"/>
+<rect class="lh" x="10" y="10" width="176" height="32"/>
+<rect class="lh" x="186" y="10" width="160" height="32"/>
+<rect class="lh" x="346" y="10" width="160" height="32"/>
+<rect class="lh" x="506" y="10" width="170" height="32"/>
+<g class="th lh-t" text-anchor="middle" dominant-baseline="central">
+  <text x="98" y="26">Referring provider</text>
+  <text x="266" y="26">System</text>
+  <text x="426" y="26">Receiving dept.</text>
+  <text x="591" y="26">Scheduling staff</text>
+</g>
+
+<path class="main" d="M166 86 L266 86 L266 130" marker-end="url(#am)"/>
+<path class="main" d="M266 182 L266 202" marker-end="url(#am)"/>
+<path class="main" d="M266 254 L266 274" marker-end="url(#am)"/>
+<path class="main" d="M266 326 L266 346" marker-end="url(#am)"/>
+<path class="main" d="M331 374 L426 374 L426 418" marker-end="url(#am)"/>
+<path class="main" d="M491 446 L591 446 L591 490" marker-end="url(#am)"/>
+<path class="main" d="M591 542 L591 562" marker-end="url(#am)"/>
+<path class="exc" d="M201 158 L170 158" marker-end="url(#ae)"/>
+<path class="exc" d="M101 134 L101 114" marker-end="url(#ae)"/>
+<path class="exc" d="M201 230 L170 230" marker-end="url(#ae)"/>
+<path class="exc" d="M426 470 L426 490" marker-end="url(#ae)"/>
+<path class="exc" d="M361 446 L170 446" marker-end="url(#ae)"/>
+<path class="exc" d="M36 446 L20 446 L20 86 L32 86" marker-end="url(#ae)"/>
+
+<text class="ts" x="274" y="192">Yes</text>
+<text class="ts" x="274" y="264">No</text>
+<text class="ts" x="188" y="148" text-anchor="middle">No</text>
+<text class="ts" x="188" y="220" text-anchor="middle">Yes</text>
+<text class="ts" x="109" y="124">Resubmit</text>
+<text class="ts" x="28" y="330">Resubmit</text>
+<text class="ts" x="265" y="436" text-anchor="middle">More info</text>
+<text class="ts" x="541" y="436" text-anchor="middle">Accept</text>
+<text class="ts" x="434" y="480">Reject</text>
+
+<g class="teal" text-anchor="middle" dominant-baseline="central">
+  <rect x="36" y="62" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="101" y="77">Submit referral</text><text class="ts" x="101" y="95">Required fields</text>
+  <rect x="201" y="134" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="266" y="158">All fields in?</text>
+  <rect x="201" y="206" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="266" y="230">Duplicate?</text>
+  <rect x="201" y="278" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="266" y="293">Assign ID</text><text class="ts" x="266" y="311">→ Submitted</text>
+  <rect x="201" y="350" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="266" y="365">Route referral</text><text class="ts" x="266" y="383">→ Under Review</text>
+  <rect x="361" y="422" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="426" y="446">Review referral</text>
+  <rect x="526" y="494" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="591" y="509">Book patient</text><text class="ts" x="591" y="527">→ Scheduled</text>
+  <rect x="526" y="566" width="130" height="48" rx="8" stroke-width="2"/>
+  <text class="th" x="591" y="581">Mark complete</text><text class="ts" x="591" y="599">→ Completed</text>
+</g>
+
+<g class="coral" text-anchor="middle" dominant-baseline="central">
+  <rect x="36" y="134" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="101" y="149">Incomplete</text><text class="ts" x="101" y="167">Missing fields</text>
+  <rect x="36" y="206" width="130" height="48" rx="8" stroke-width="2"/>
+  <text class="th" x="101" y="221">Blocked</text><text class="ts" x="101" y="239">Existing ID shown</text>
+  <rect x="36" y="422" width="130" height="48" rx="8" stroke-width=".5"/>
+  <text class="th" x="101" y="437">Incomplete</text><text class="ts" x="101" y="455">More info needed</text>
+  <rect x="361" y="494" width="130" height="48" rx="8" stroke-width="2"/>
+  <text class="th" x="426" y="509">Rejected</text><text class="ts" x="426" y="527">Reason recorded</text>
+</g>
+
+<g dominant-baseline="central">
+  <rect class="teal" x="40" y="662" width="14" height="14" rx="3" style="fill:#E1F5EE;stroke:#0F6E56;stroke-width:.5"/>
+  <text class="ts" x="60" y="669">Main flow</text>
+  <rect x="150" y="662" width="14" height="14" rx="3" style="fill:#FAECE7;stroke:#993C1D;stroke-width:.5"/>
+  <text class="ts" x="170" y="669">Exception path</text>
+  <rect x="290" y="662" width="14" height="14" rx="3" style="fill:#fff;stroke:#5F5E5A;stroke-width:2"/>
+  <text class="ts" x="310" y="669">End state</text>
+  <text class="ts" x="410" y="669">→ status becomes</text>
+</g>
+</svg>
+</section>
+
+<section class="page">
+  <h1>Workflow Worksheet</h1>
+  <p class="sub">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
+  <table>
+    <thead>
+      <tr><th>#</th><th style="width:17%">Actor</th><th style="width:26%">Action</th><th style="width:26%">Decision / condition</th><th style="width:26%">Outcome / next step</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>Referring Provider</td><td>Submits a referral with patient ID, reason, requested service, and urgency.</td><td>N/A</td><td>Request received; the system validates it next (no status yet).</td></tr>
+      <tr><td>2</td><td>System</td><td>Checks required fields.</td><td>Are patient ID, reason, requested service, and urgency all present?</td><td>Yes → continue. No → Incomplete, returned to provider (exception).</td></tr>
+      <tr><td>3</td><td>System</td><td>Checks for a duplicate active referral.</td><td>Is there already an open referral for this patient and service?</td><td>Yes → blocked, existing ID shown (exception). No → continue.</td></tr>
+      <tr><td>4</td><td>System</td><td>Routes the referral to the matching department.</td><td>Which department offers the requested service?</td><td>Status = Under Review.</td></tr>
+      <tr><td>5</td><td>Receiving Department Staff</td><td>Reviews the referral.</td><td>Accept, reject, or request more information?</td><td>Accepted / Rejected (reason required) / Incomplete (exception).</td></tr>
+      <tr><td>6</td><td>Scheduling Staff</td><td>Books the patient for the accepted service.</td><td>N/A</td><td>Status = Scheduled.</td></tr>
+      <tr><td>7</td><td>Scheduling Staff</td><td>Marks the referral complete after the visit.</td><td>N/A</td><td>Status = Completed (final).</td></tr>
+    </tbody>
+  </table>
+</section>
+
+</body>
+</html>
