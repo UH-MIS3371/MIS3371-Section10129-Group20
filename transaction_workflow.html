@@ -141,7 +141,7 @@
       <tr><th>#</th><th style="width:17%">Actor</th><th style="width:26%">Action</th><th style="width:26%">Decision / condition</th><th style="width:26%">Outcome / next step</th></tr>
     </thead>
     <tbody>
-      <tr><td>1</td><td>Referring Provider</td><td>Submits a referral with patient ID, reason, requested service, and urgency.</td><td>N/A</td><td>Request logged; status = Submitted (pending validation).</td></tr>
+      <tr><td>1</td><td>Referring Provider</td><td>Submits a referral with patient ID, reason, requested service, and urgency.</td><td>N/A</td><td>Request received; the system validates it next (no status yet).</td></tr>
       <tr><td>2</td><td>System</td><td>Checks required fields.</td><td>Are patient ID, reason, requested service, and urgency all present?</td><td>Yes → continue. No → Incomplete, returned to provider (exception).</td></tr>
       <tr><td>3</td><td>System</td><td>Checks for a duplicate active referral.</td><td>Is there already an open referral for this patient and service?</td><td>Yes → blocked, existing ID shown (exception). No → continue.</td></tr>
       <tr><td>4</td><td>System</td><td>Routes the referral to the matching department.</td><td>Which department offers the requested service?</td><td>Status = Under Review.</td></tr>
