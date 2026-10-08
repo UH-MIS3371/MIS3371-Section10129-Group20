@@ -49,9 +49,7 @@ const dateMessage = document.querySelector("#dateMessage");
 const duplicateMessage = document.querySelector("#duplicateMessage");
 const routingMessage = document.querySelector("#routingMessage");
 const formMessage = document.querySelector("#formMessage");
-
-const recordDepartment = document.querySelector("#recordReceivingDepartment");
-const recordStatus = document.querySelector("#recordStatus");
+const departmentMessage = document.querySelector("#departmentMessage");
 
 
 // ---------------------------------------------------------
@@ -103,7 +101,6 @@ function showMessage(element, text, type) {
 // Any change after a passed check means the form must be checked again.
 function clearFormMessage() {
   showMessage(formMessage, "", "");
-  recordStatus.textContent = "Not submitted";
 }
 
 
@@ -130,9 +127,11 @@ function updateDepartment() {
   const department = getReceivingDepartment(serviceSelect.value);
 
   if (department === "") {
-    recordDepartment.textContent = "Choose a service above";
+    showMessage(departmentMessage, "", "");
   } else {
-    recordDepartment.textContent = department + " (routed by BR-2)";
+    showMessage(departmentMessage,
+      "This referral will be routed to " + department + ".",
+      "info");
   }
 }
 
@@ -245,9 +244,6 @@ function handleSubmit(event) {
     "Client-side checks passed. This referral would be routed to " +
       department + " for review within " + reviewWindow + ".",
     "success");
-
-  recordStatus.textContent =
-    "Ready to submit (the official status is set by the system)";
 }
 
 
