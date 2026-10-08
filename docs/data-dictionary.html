@@ -6,7 +6,7 @@
 <style>
   body { font-family: Georgia, 'Times New Roman', serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #111; line-height: 1.5; }
   h1 { font-size: 28px; margin-bottom: 4px; }
-  .meta { color: #555; font-size: 14px; margin-bottom: 28px; }
+.meta { color: #555; font-size: 14px; margin-bottom: 28px; }
   h2 { font-size: 20px; margin-top: 34px; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
   p { font-size: 16px; }
   table { border-collapse: collapse; width: 100%; margin-top: 10px; font-size: 13px; }
@@ -16,44 +16,47 @@
 </style>
 </head>
 <body>
-
 <h1>Data Dictionary: Patient Referral</h1>
 <p class="meta">MIS 3371 &nbsp;|&nbsp; Week 3 Capstone Design Checkpoint &nbsp;|&nbsp; Team TPS_3371_TEAM_20 &nbsp;|&nbsp; Patient Referral Management System</p>
-
-<p>14 fields covering the referral record from submission through scheduling. All patient and provider data in this project is fictional.</p>
-
+<p>15 fields covering the referral record from submission through scheduling. All patient and provider data in this project is fictional.</p>
 <table>
 <tr><th>Field</th><th>Meaning</th><th>Type</th><th>Required</th><th>Source</th><th>Rule / constraint</th><th>Example</th></tr>
-<tr><td><code>referral_id</code></td><td>Unique identifier for the referral</td><td>String</td><td>Yes</td><td>System-assigned</td><td>Unique and immutable once created</td><td>REF-2026-004821</td></tr>
-<tr><td><code>patient_id</code></td><td>Patient being referred (fictional)</td><td>String</td><td>Yes</td><td>User-entered, selected from patient record</td><td>Must match an existing patient record</td><td>PAT-88213</td></tr>
-<tr><td><code>referring_provider_id</code></td><td>Provider who created the referral</td><td>String</td><td>Yes</td><td>System-assigned, from the logged-in user</td><td>Must be an active referring-provider account</td><td>DR-4410</td></tr>
-<tr><td><code>reason</code></td><td>Why the referral was made</td><td>Text</td><td>Yes</td><td>User-entered</td><td>Cannot be blank</td><td>"Suspected cardiac arrhythmia"</td></tr>
-<tr><td><code>requested_service</code></td><td>Service or specialty requested</td><td>Enum</td><td>Yes</td><td>User-entered</td><td>Must match a service offered by an active department</td><td>"Cardiology"</td></tr>
+<tr><td><code>referralId</code></td><td>Unique identifier for the referral</td><td>String</td><td>Yes</td><td>System-assigned</td><td>Unique and immutable once created</td><td>REF-2026-004821</td></tr>
+<tr><td><code>patientId</code></td><td>Patient being referred (fictional)</td><td>String</td><td>Yes</td><td>User-entered, selected from patient record</td><td>Must match an existing patient record; format PAT-00000</td><td>PAT-88213</td></tr>
+<tr><td><code>referringProviderId</code></td><td>Provider who created the referral</td><td>String</td><td>Yes</td><td>User-entered for now (will come from login in a later week)</td><td>Must be an active referring-provider account; format DR-0000</td><td>DR-4410</td></tr>
+<tr><td><code>referralDate</code></td><td>Date the provider decided the patient needs the referral (the visit date)</td><td>Date</td><td>Yes</td><td>User-entered</td><td>Cannot be a future date (BR-9)</td><td>2026-09-14</td></tr>
+<tr><td><code>referralReason</code></td><td>Why the referral was made</td><td>Text</td><td>Yes</td><td>User-entered</td><td>Cannot be blank</td><td>"Suspected cardiac arrhythmia"</td></tr>
+<tr><td><code>requestedService</code></td><td>Service or specialty requested</td><td>Enum</td><td>Yes</td><td>User-entered</td><td>One of: Cardiology, Dermatology, Orthopedics, Physical Therapy</td><td>"Cardiology"</td></tr>
 <tr><td><code>urgency</code></td><td>How soon the patient needs to be seen</td><td>Enum (Routine, Urgent)</td><td>Yes</td><td>User-entered</td><td>Must be one of the two defined levels</td><td>"Urgent"</td></tr>
-<tr><td><code>receiving_department</code></td><td>Department the referral is routed to</td><td>String</td><td>Yes</td><td>Derived, mapped from requested_service</td><td>Must offer the requested service</td><td>"Cardiology Dept"</td></tr>
-<tr><td><code>status</code></td><td>Current state of the referral</td><td>Enum</td><td>Yes</td><td>System-assigned</td><td>Must follow the allowed state transition list</td><td>"Under Review"</td></tr>
-<tr><td><code>decision_reason</code></td><td>Why a referral was rejected, sent back or cancelled</td><td>Text</td><td>Conditional</td><td>User-entered, by receiving department staff, or by the provider/coordinator when cancelling</td><td>Required when status is Rejected, Incomplete, or Cancelled</td><td>"Missing urgency level"</td></tr>
-<tr><td><code>submitted_at</code></td><td>Timestamp the referral was created</td><td>DateTime</td><td>Yes</td><td>System-assigned</td><td>Set once at creation, never edited</td><td>2026-09-14 09:10</td></tr>
-<tr><td><code>updated_at</code></td><td>Timestamp of the most recent status change</td><td>DateTime</td><td>Yes</td><td>System-assigned</td><td>Updates automatically on every transition</td><td>2026-09-15 11:40</td></tr>
-<tr><td><code>reviewed_by</code></td><td>Staff member who reviewed the referral</td><td>String (user ID)</td><td>Conditional</td><td>System-assigned, from the logged-in reviewer</td><td>Required once status leaves Under Review</td><td>"jsmith"</td></tr>
-<tr><td><code>scheduled_date</code></td><td>Date and time the patient is scheduled</td><td>DateTime</td><td>Conditional</td><td>User-entered, by scheduling staff</td><td>Required once status is Scheduled</td><td>2026-09-22 14:00</td></tr>
-<tr><td><code>overdue_flag</code></td><td>Marks a referral stuck in review too long</td><td>Boolean</td><td>Derived</td><td>Derived, system checks time in Under Review against the review threshold</td><td>True once Under Review exceeds the threshold</td><td>TRUE</td></tr>
+<tr><td><code>receivingDepartment</code></td><td>Department the referral is routed to</td><td>String</td><td>Yes</td><td>Derived, mapped from requestedService</td><td>Mapped from requestedService (e.g., Cardiology -&gt; Cardiology Dept) (BR-2)</td><td>"Cardiology Dept"</td></tr>
+<tr><td><code>status</code></td><td>Current state of the referral</td><td>Enum</td><td>Yes</td><td>System-assigned</td><td>One of: Submitted, Incomplete, Under Review, Accepted, Rejected, Scheduled, Completed, Cancelled; must follow the allowed state transitions</td><td>"Under Review"</td></tr>
+<tr><td><code>decisionReason</code></td><td>Why a referral was rejected, sent back or cancelled</td><td>Text</td><td>Conditional</td><td>User-entered, by receiving department staff, or by the provider/coordinator when cancelling</td><td>Required when status is Rejected, Incomplete, or Cancelled</td><td>"Need recent ECG results"</td></tr>
+<tr><td><code>submittedAt</code></td><td>Timestamp the referral was created</td><td>DateTime</td><td>Yes</td><td>System-assigned</td><td>Set once at creation, never edited</td><td>2026-09-14 09:10</td></tr>
+<tr><td><code>updatedAt</code></td><td>Timestamp of the most recent status change</td><td>DateTime</td><td>Yes</td><td>System-assigned</td><td>Updates automatically on every transition</td><td>2026-09-15 11:40</td></tr>
+<tr><td><code>reviewedBy</code></td><td>Staff member who reviewed the referral</td><td>String (user ID)</td><td>Conditional</td><td>System-assigned, from the logged-in reviewer</td><td>Required when status is Accepted, Rejected, or Incomplete</td><td>"jsmith"</td></tr>
+<tr><td><code>scheduledDate</code></td><td>Date and time the patient is scheduled</td><td>DateTime</td><td>Conditional</td><td>User-entered, by scheduling staff</td><td>Required once status is Scheduled</td><td>2026-09-22 14:00</td></tr>
+<tr><td><code>overdueFlag</code></td><td>Marks a referral stuck in review too long</td><td>Boolean</td><td>System</td><td>Derived, system checks time in Under Review against the review threshold</td><td>True once Under Review exceeds the threshold</td><td>TRUE</td></tr>
 </table>
-
 <h2>Status History Log</h2>
 <p>Every status change is saved as its own row in a separate log, so each referral keeps a full history of who changed it, when, and why. The main record above holds only the current status.</p>
 <table>
 <tr><th>Field</th><th>Meaning</th><th>Type</th><th>Required</th><th>Source</th><th>Rule / constraint</th><th>Example</th></tr>
-<tr><td><code>referral_id</code></td><td>Referral this change belongs to</td><td>String</td><td>Yes</td><td>System-assigned</td><td>Must match an existing referral</td><td>REF-2026-004821</td></tr>
-<tr><td><code>from_status</code></td><td>Status before the change</td><td>Enum</td><td>Conditional</td><td>System-assigned</td><td>Blank when the referral is first created</td><td>"Under Review"</td></tr>
-<tr><td><code>to_status</code></td><td>Status after the change</td><td>Enum</td><td>Yes</td><td>System-assigned</td><td>Must be an allowed transition</td><td>"Accepted"</td></tr>
-<tr><td><code>changed_by</code></td><td>User who made the change</td><td>String (user ID)</td><td>Yes</td><td>System-assigned, from the logged-in user</td><td>"system" for automatic changes</td><td>"jsmith"</td></tr>
-<tr><td><code>changed_at</code></td><td>When the change happened</td><td>DateTime</td><td>Yes</td><td>System-assigned</td><td>Set once, never edited</td><td>2026-09-15 11:40</td></tr>
-<tr><td><code>change_reason</code></td><td>Reason given for the change</td><td>Text</td><td>Conditional</td><td>User-entered</td><td>Required for Rejected, Incomplete, or Cancelled</td><td>"Patient moved out of area"</td></tr>
+<tr><td><code>referralId</code></td><td>Referral this change belongs to</td><td>String</td><td>Yes</td><td>System-assigned</td><td>Must match an existing referral</td><td>REF-2026-004821</td></tr>
+<tr><td><code>fromStatus</code></td><td>Status before the change</td><td>Enum</td><td>Conditional</td><td>System-assigned</td><td>Blank when the referral is first created</td><td>"Under Review"</td></tr>
+<tr><td><code>toStatus</code></td><td>Status after the change</td><td>Enum</td><td>Yes</td><td>System-assigned</td><td>Must be an allowed transition</td><td>"Accepted"</td></tr>
+<tr><td><code>changedBy</code></td><td>User who made the change</td><td>String (user ID)</td><td>Yes</td><td>System-assigned, from the logged-in user</td><td>"system" for automatic changes</td><td>"jsmith"</td></tr>
+<tr><td><code>changedAt</code></td><td>When the change happened</td><td>DateTime</td><td>Yes</td><td>System-assigned</td><td>Set once, never edited</td><td>2026-09-15 11:40</td></tr>
+<tr><td><code>changeReason</code></td><td>Reason given for the change</td><td>Text</td><td>Conditional</td><td>User-entered</td><td>Required for Rejected, Incomplete, or Cancelled</td><td>"Patient moved out of area"</td></tr>
 </table>
-  
-  <h2>Notes</h2>
-<p><code>referral_id</code>, <code>status</code>, <code>submitted_at</code>, and <code>updated_at</code> cover the required transaction ID, status field, and two timestamps. User-entered fields come from the form; derived fields are calculated from other data; system-assigned fields are generated by the system with no user input.</p>
 
+<h2>Form Mapping</h2>
+<ul>
+  <li><strong>Entered on the form:</strong> <code>patientId</code>, <code>referringProviderId</code>, <code>referralDate</code>, <code>requestedService</code>, <code>urgency</code>, <code>referralReason</code></li>
+  <li><strong>Shown on the page as a message:</strong> <code>receivingDepartment</code> (appears under Requested Service)</li>
+  <li><strong>Set by the system later (not on the form):</strong> <code>referralId</code>, <code>status</code>, <code>submittedAt</code>, <code>updatedAt</code>, <code>reviewedBy</code>, <code>decisionReason</code>, <code>scheduledDate</code>, <code>overdueFlag</code></li>
+</ul>
+
+  <h2>Notes</h2>
+<p><code>referralId</code>, <code>status</code>, <code>submittedAt</code>, and <code>updatedAt</code> cover the required transaction ID, status field, and two timestamps. User-entered fields come from the form; derived fields are calculated from other data; system-assigned fields are generated by the system with no user input.</p>
 </body>
 </html>
