@@ -38,7 +38,7 @@ MIS3371-Section10129-Group20/
 │   ├── user-stories-acceptance.md
 │   ├── business-rules-states.md
 │   ├── traceability-matrix.md
-│   ├── data-dictionary.html
+│   └── data-dictionary.html
 ├── diagrams/
 │   └── architecture-v1.html          (three tiers + responsibility notes)
 ├── app/
