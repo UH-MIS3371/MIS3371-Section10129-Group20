@@ -89,6 +89,23 @@ function requiresPriorityRouting(urgencyValue) {
 
 
 // ---------------------------------------------------------
+// PASS/FAIL VALIDATION CHECKS
+// One rule, two uses: live feedback AND the submit gate call
+// these same checks, so each condition is written only once.
+// ---------------------------------------------------------
+
+// BR-9: true when the referral date is today or earlier.
+function referralDateSatisfied(dateString) {
+  return !isFutureDate(dateString);
+}
+
+// BR-3: true when there is NO active referral for this patient + service.
+function duplicateRuleSatisfied(patientId, serviceValue) {
+  return !findActiveDuplicate(patientId, serviceValue);
+}
+
+
+// ---------------------------------------------------------
 // MESSAGE HELPER
 // ---------------------------------------------------------
 
@@ -116,8 +133,10 @@ function updateDateMessage() {
     return;
   }
 
-  if (isFutureDate(dateValue)) {
-    showMessage(dateMessage, "Referral date cannot be in the future.", "error");
+  if (!referralDateSatisfied(dateValue)) {
+    showMessage(dateMessage,
+      "Referral date cannot be in the future. Choose today or an earlier date.",
+      "error");
   } else {
     showMessage(dateMessage, "", "");
   }
@@ -145,13 +164,12 @@ function updateDuplicateMessage() {
     return;
   }
 
-  const duplicate = findActiveDuplicate(patientId, serviceValue);
-
-  if (duplicate) {
+  if (!duplicateRuleSatisfied(patientId, serviceValue)) {
+    const duplicate = findActiveDuplicate(patientId, serviceValue);
     showMessage(
       duplicateMessage,
-      "This patient already has an active referral for this service: " +
-        duplicate.referralId + ".",
+      "This patient already has an active referral for this service (" +
+        duplicate.referralId + "). Pick a different service or check the existing referral.",
       "error"
     );
   } else {
@@ -210,32 +228,31 @@ function handleSubmit(event) {
   // before this function runs.
   event.preventDefault();
 
+  const patientId = patientIdInput.value.trim();
+  const serviceValue = serviceSelect.value;
+
   // BR-9: validation. Stop if the date is in the future.
-  if (isFutureDate(referralDateInput.value)) {
+  if (!referralDateSatisfied(referralDateInput.value)) {
     showMessage(formMessage,
-      "Cannot submit: the referral date cannot be in the future.",
+      "Cannot submit: the referral date cannot be in the future. Choose today or an earlier date.",
       "error");
     referralDateInput.focus();
     return;
   }
 
   // BR-3: conditional business rule using two fields together.
-  const duplicate = findActiveDuplicate(
-    patientIdInput.value.trim(),
-    serviceSelect.value
-  );
-
-  if (duplicate) {
+  if (!duplicateRuleSatisfied(patientId, serviceValue)) {
+    const duplicate = findActiveDuplicate(patientId, serviceValue);
     showMessage(formMessage,
       "Cannot submit: this patient already has an active referral for this service (" +
-        duplicate.referralId + ").",
+        duplicate.referralId + "). Pick a different service or check the existing referral.",
       "error");
     patientIdInput.focus();
     return;
   }
 
   // All browser-side checks passed.
-  const department = getReceivingDepartment(serviceSelect.value);
+  const department = getReceivingDepartment(serviceValue);
   const reviewWindow = requiresPriorityRouting(urgencySelect.value)
     ? "1 business day"
     : "3 business days";
