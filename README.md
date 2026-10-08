@@ -39,7 +39,6 @@ MIS3371-Section10129-Group20/
 │   ├── business-rules-states.md
 │   ├── traceability-matrix.md
 │   ├── data-dictionary.html
-│   └── week7-testing-checklist.md
 ├── diagrams/
 │   └── architecture-v1.html          (three tiers + responsibility notes)
 ├── app/
