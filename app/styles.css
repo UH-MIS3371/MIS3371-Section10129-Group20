@@ -179,3 +179,94 @@ footer {
     width: 100%;
   }
 }
+
+/* ---------- Week 7: feedback messages ---------- */
+/* Colors are placeholders; the medical theme can restyle these. */
+
+.message {
+  margin: 0.4rem 0 0;
+  font-size: 0.95rem;
+}
+
+.message:empty {
+  display: none;
+}
+
+.message--error {
+  color: #b91c1c;
+  font-weight: 600;
+}
+
+.message--success {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.message--info {
+  color: #444;
+}
+
+.form-actions .message {
+  margin-top: 0.75rem;
+}
+
+/* ---------- Read-only referral record ---------- */
+
+.record {
+  margin: 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.record dt {
+  font-weight: 600;
+  margin-top: 0.75rem;
+}
+
+.record dt:first-child {
+  margin-top: 0;
+}
+
+.record dt code {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: #666;
+  margin-left: 0.35rem;
+}
+
+.record dd {
+  margin: 0.15rem 0 0;
+  color: #444;
+}
+
+/* ---------- Field layout ---------- */
+/* Fields are <p class="field"> inside the fieldset. The fieldset is a
+   two-column grid: every field is full width, and "field--half"
+   fields share a row. */
+
+fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.25rem;
+}
+
+.field {
+  grid-column: 1 / -1;
+  margin: 0 0 1.25rem;
+}
+
+.field--half {
+  grid-column: auto;
+}
+
+/* Messages are <span>s inside a field; show each on its own line. */
+.message {
+  display: block;
+}
+
+/* Placeholder hint text */
+::placeholder {
+  color: #888;
+}
