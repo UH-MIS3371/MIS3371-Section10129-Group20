@@ -38,11 +38,12 @@ MIS3371-Section10129-Group20/
 │   ├── user-stories-acceptance.md
 │   ├── business-rules-states.md
 │   ├── traceability-matrix.md
-│   └── data-dictionary.html
+│   ├── data-dictionary.html
+│   └── week7-testing-checklist.md
 ├── diagrams/
 │   └── architecture-v1.html          (three tiers + responsibility notes)
 ├── app/
-│   ├── index.html                    (referral form + read-only referral record)
+│   ├── index.html                    (referral form)
 │   ├── styles.css
 │   └── app.js
 └── archive/                          (superseded drafts, kept for history)
