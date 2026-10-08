@@ -210,36 +210,6 @@ footer {
   margin-top: 0.75rem;
 }
 
-/* ---------- Read-only referral record ---------- */
-
-.record {
-  margin: 0;
-  padding: 1rem 1.25rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-}
-
-.record dt {
-  font-weight: 600;
-  margin-top: 0.75rem;
-}
-
-.record dt:first-child {
-  margin-top: 0;
-}
-
-.record dt code {
-  font-weight: 400;
-  font-size: 0.8rem;
-  color: #666;
-  margin-left: 0.35rem;
-}
-
-.record dd {
-  margin: 0.15rem 0 0;
-  color: #444;
-}
 
 /* ---------- Field layout ---------- */
 /* Fields are <p class="field"> inside the fieldset. The fieldset is a
