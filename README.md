@@ -38,8 +38,7 @@ MIS3371-Section10129-Group20/
 │   ├── user-stories-acceptance.md
 │   ├── business-rules-states.md
 │   ├── traceability-matrix.md
-│   ├── data-dictionary.html
-│   └── week7-testing-checklist.md
+│   └── data-dictionary.html
 ├── diagrams/
 │   └── architecture-v1.html          (three tiers + responsibility notes)
 ├── app/
@@ -48,6 +47,22 @@ MIS3371-Section10129-Group20/
 │   └── app.js
 └── archive/                          (superseded drafts, kept for history)
 ```
+
+## Week 7 Tests
+
+Open `app/index.html` in a browser and fill every field. Sample active referrals in `app.js`: `PAT-88213` + Cardiology (`REF-2026-004821`) and `PAT-10452` + Orthopedics (`REF-2026-004905`).
+
+| # | Test | Input | Expected Result |
+|---|---|---|---|
+| 1 | Date boundary: today | Referral date = today | Passes (BR-9 allows today) |
+| 2 | Date boundary: tomorrow | Referral date = tomorrow | Blocked: "Referral date cannot be in the future. Choose today or an earlier date." |
+| 3 | Duplicate referral | `PAT-88213` + Cardiology | Blocked at submit: shows `REF-2026-004821`; cursor moves to Patient ID (BR-3) |
+| 4 | Same patient, different service | `PAT-88213` + Dermatology | Passes: only the same patient + same service is a duplicate |
+| 5 | New patient | `PAT-12345` + Cardiology + Urgent | Passes: routed to Cardiology Dept, review within 1 business day (BR-2, BR-7) |
+| 6 | Urgency changes the path | Switch Urgent ↔ Routine | Message changes between 1 and 3 business days; the referral is still valid (BR-7) |
+| 7 | Department routing | Pick each service | Message names the matching department (BR-2) |
+
+Test 2 is the boundary test: today is the last valid date, so tomorrow is the first blocked value.
 
 ## Key Distinctions
 - **Workflow vs. state:** the workflow shows actions and decisions ("department reviews referral"); the state shows what is true now ("Under Review").
