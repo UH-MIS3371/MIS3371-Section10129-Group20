@@ -1,21 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <!--
-    WEEK 4 — SESSION 2 LIVE DEMO
-    Goal: turn the semantic page from Session 1 into an accessible transaction form.
-
-    Teaching focus:
-    1. <form>
-    2. <label> + for/id connection
-    3. id vs name
-    4. Appropriate control types
-    5. <fieldset> + <legend>
-    6. Native HTML constraints
-    7. Accessibility
-    8. Validation vs business rules
-  -->
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Submit a Patient Referral</title>
@@ -27,7 +12,6 @@
 
   <header>
     <h1>Submit a Patient Referral</h1>
-    <p>Complete the form below to submit a patient referral.</p>
     <p>Submit one patient referral to a requested service.</p>
   </header>
 
@@ -36,8 +20,8 @@
     <section>
       <h2>Before You Submit</h2>
       <p>
-        Complete the required fields below.
-        Use fictional patient information only for this demonstration.
+        Complete every field below. Use fictional patient and provider
+        information only. No real patient data.
       </p>
     </section>
 
@@ -45,191 +29,124 @@
       <h2>Referral Details</h2>
 
       <!--
-        <form> groups the controls that participate in one submission.
-
-        method="get" is used only for this classroom demo.
-        After a valid submission, notice that the field NAMES appear
-        in the browser URL as submitted data.
-
-        In the real capstone, submission will later go through
-        JavaScript/API/backend logic.
+        Field ids and names match the data dictionary exactly
+        (docs/data-dictionary.html). Native HTML constraints handle simple
+        single-field checks. app.js handles rules that need JavaScript
+        (BR-2 department preview, BR-3 duplicate check, BR-7 review window,
+        BR-9 no future referral date).
       -->
-      <form method="get">
+      <form id="referralForm">
 
-        <!--
-          <fieldset> groups related controls.
-          <legend> gives the group a meaningful name.
-        -->
         <fieldset>
-
           <legend>Referral Information</legend>
 
-          <!-- =====================================================
-               PATIENT ID
-               ===================================================== -->
-
           <!--
-            for="patientId" must match id="patientId".
-            This connects the visible label to the input.
+            Each field is a <p> holding its label and control.
+            "field--half" fields sit side by side
+            (laid out in styles.css).
           -->
-          <label for="patientId">Patient ID</label>
-          <!--for connect the label to input id-->
-          <input
-            id="patientId"
-            name="patientId"
-            type="text"
-            required
-          >
 
-          <br><br>
+          <!-- patientId: String, required, format PAT-00000 -->
+          <p class="field field--half">
+            <label for="patientId">Patient ID</label>
+            <input
+              id="patientId"
+              name="patientId"
+              type="text"
+              placeholder="PAT-00000"
+              pattern="PAT-[0-9]{5}"
+              title="Use the format PAT- followed by 5 digits, for example PAT-88213"
+              required
+            >
+          </p>
 
-          <!-- =====================================================
-               REFERRAL PROVIDER
-               ===================================================== -->
+          <!-- referringProviderId: String, required, format DR-0000.
+               Typed for now; will come from login in a later week. -->
+          <p class="field field--half">
+            <label for="referringProviderId">Referring Provider ID</label>
+            <input
+              id="referringProviderId"
+              name="referringProviderId"
+              type="text"
+              placeholder="DR-0000"
+              pattern="DR-[0-9]{4}"
+              title="Use the format DR- followed by 4 digits, for example DR-4410"
+              required
+            >
+          </p>
 
-          <label for="referringProvider">Referral Provider</label>
+          <!-- referralDate: Date, required, cannot be in the future (BR-9).
+               app.js sets max to today and double-checks on submit. -->
+          <p class="field">
+            <label for="referralDate">Referral Date</label>
+            <input
+              id="referralDate"
+              name="referralDate"
+              type="date"
+              required
+            >
+            <span id="dateMessage" class="message" aria-live="polite"></span>
+          </p>
 
-          <input
-            id="referringProvider"
-            name="referringProvider"
-            type="text"
-            required
-          >
+          <!-- requestedService: Enum. Only services a department offers (BR-2). -->
+          <p class="field field--half">
+            <label for="requestedService">Requested Service</label>
+            <select
+              id="requestedService"
+              name="requestedService"
+              required
+            >
+              <option value="">Choose a service</option>
+              <option value="cardiology">Cardiology</option>
+              <option value="dermatology">Dermatology</option>
+              <option value="orthopedics">Orthopedics</option>
+              <option value="physical-therapy">Physical Therapy</option>
+            </select>
+            <span id="departmentMessage" class="message" aria-live="polite"></span>
+            <span id="duplicateMessage" class="message" aria-live="polite"></span>
+          </p>
 
-          <br><br>
+          <!-- urgency: Enum (Routine, Urgent). Drives the BR-7 review window. -->
+          <p class="field field--half">
+            <label for="urgency">Urgency</label>
+            <select
+              id="urgency"
+              name="urgency"
+              required
+            >
+              <option value="">Choose an urgency level</option>
+              <option value="routine">Routine</option>
+              <option value="urgent">Urgent</option>
+            </select>
+            <span id="routingMessage" class="message" aria-live="polite"></span>
+          </p>
 
-          <!-- =====================================================
-               REQUESTED SERVICE
-               ===================================================== -->
-
-          <label for="requestService">Requested Service</label>
-
-          <!--
-            <select> is appropriate because the business allows
-            a known set of services.
-
-            BUSINESS RULE FOR LATER:
-            The referral is routed only to the department that
-            offers the selected service.
-          -->
-          <select
-            id="requestService"
-            name="requestService"
-            required
-          >
-            <option value="">Choose a service</option>
-            <option value="cardiology">Cardiology</option>
-            <option value="dermatology">Dermatology</option>
-            <option value="orthopedics">Orthopedics</option>
-            <option value="physicaltherapy">Physical Therapy</option>
-            <option value="other">Other</option>
-          </select>
-
-          <br><br>
-
-          <!-- =====================================================
-               URGENCY
-               ===================================================== -->
-
-          <label for="urgency">Urgency</label>
-
-          <!--
-            <select> is appropriate because the business allows
-            a known set of urgency levels.
-
-            BUSINESS RULE FOR LATER:
-            An urgent referral under review for more than 1 business
-            day is overdue. A routine referral is overdue after 3
-            business days.
-          -->
-          <select
-            id="urgency"
-            name="urgency"
-            required
-          >
-            <option value="">Choose an urgency level</option>
-            <option value="urgent">Urgent</option>
-            <option value="routine">Routine</option>
-          </select>
-
-          <!--
-            WEEK 6: app.js reads this select on change and previews
-            BR-7's review window here, before the referral is submitted.
-          -->
-          <p id="routingMessage" aria-live="polite"></p>
-
-          <br><br>
-
-          <!-- =====================================================
-               REASON FOR REFERRAL
-               ===================================================== -->
-
-          <label for="referralReason">Reason for Referral</label>
-          <br>
-
-          <textarea
-            id="referralReason"
-            name="referralReason"
-            rows="4"
-            cols="45"
-            required
-          ></textarea>
-
-          <!-- =====================================================
-               ADDITIONAL BUSINESS RULES
-               ===================================================== -->
-
-          <!--
-            BUSINESS RULES FOR LATER:
-
-            Patient ID, reason, requested service, urgency, and
-            referring provider are required to submit a referral.
-
-            A patient cannot have two active referrals for the same
-            service.
-
-            Missing information or a request for more information
-            makes the referral Incomplete until the provider resubmits.
-
-            A referral cannot be rejected without a reason that is
-            visible to the provider.
-
-            A referral must be Accepted before it can be Scheduled.
-            It must be Scheduled before it can be Completed.
-
-            Only authorized referral staff may cancel an active
-            referral. A cancellation reason is required, and a
-            Completed referral cannot be canceled.
-
-            Basic HTML cannot express these workflow rules by itself.
-            JavaScript and server/application logic will handle them later.
-          -->
+          <!-- referralReason: Text, required, cannot be blank. -->
+          <p class="field">
+            <label for="referralReason">Reason for Referral</label>
+            <textarea
+              id="referralReason"
+              name="referralReason"
+              rows="4"
+              placeholder="Describe the symptoms or clinical reason for this referral"
+              required
+            ></textarea>
+          </p>
 
         </fieldset>
 
-        <br>
-
-        <!--
-          type="submit" asks the browser to submit the form.
-
-          Before submission, the browser checks the native constraints.
-          Try:
-          - leaving a required field empty
-          - choosing a service
-          - choosing an urgency level
-        -->
-        <button type="submit">
-          Submit Referral
-        </button>
+        <p class="form-actions">
+          <button type="submit">Submit Referral</button>
+          <span id="formMessage" class="message" aria-live="polite"></span>
+        </p>
 
       </form>
-
     </section>
 
   </main>
 
   <footer>
-    <p>MIS 3371 - Patient Referral System</p>
+    <p>MIS 3371 - Patient Referral Management System - Team 20</p>
   </footer>
 
 </body>

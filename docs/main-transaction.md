@@ -6,10 +6,10 @@
 | Element | Description |
 |---|---|
 | **Trigger** | A provider decides a patient needs a service outside their own scope of practice. |
-| **Inputs** | Patient identifier (fictional), reason for referral, requested service, urgency (Routine or Urgent), referring provider. |
+| **Inputs** | Patient identifier (fictional), referring provider, referral date, reason for referral, requested service, urgency (Routine or Urgent). |
 | **System Action** | Check required fields; check for a duplicate active referral; assign a referral ID and status; route to the department that offers the service. |
 | **Outcome** | Receiving department accepts it for scheduling, requests more information, or rejects it with a reason. |
-| **Official Record** | Referral ID, patient, referring provider, requested service, urgency, receiving department, status, status history with timestamps and the user who made each change, decision reasons. |
+| **Official Record** | Referral ID, patient, referring provider, referral date, requested service, urgency, receiving department, status, status history with timestamps and the user who made each change, decision reasons. |
 
 ## Transaction Flow
 1. The referring provider fills in the referral form and submits it.

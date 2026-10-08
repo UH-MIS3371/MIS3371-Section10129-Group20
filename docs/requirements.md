@@ -5,13 +5,14 @@ Each requirement is written so another person could later test whether it was me
 
 | ID | Requirement |
 |---|---|
-| **FR-1** | The system shall allow a referring provider to submit one referral capturing patient identifier, reason for referral, requested service, urgency (Routine/Urgent), and referring provider. |
+| **FR-1** | The system shall allow a referring provider to submit one referral capturing patient identifier, referring provider, referral date, reason for referral, requested service, and urgency (Routine/Urgent). |
 | **FR-2** | The system shall reject a submission with missing required fields, save it as Incomplete, and list the missing fields. |
 | **FR-3** | The system shall assign each accepted submission a unique referral ID and an initial status of Submitted. |
 | **FR-4** | The system shall route a validated referral to the receiving department mapped to the requested service and set its status to Under Review. |
 | **FR-5** | The system shall allow receiving department staff to accept a referral, reject it with a required reason, or request more information. |
 | **FR-6** | The system shall record every status change with a timestamp and the user who made it, and show the current status and history to the referring provider and coordinator. |
 | **FR-7** | The system shall allow authorized staff to search referrals by patient identifier and view each referral's current status. |
+| **FR-8** | The system shall flag a referral as overdue for the referral coordinator when it stays Under Review longer than 1 business day (Urgent) or 3 business days (Routine). |
 
 ## Quality / Non-Functional Requirements
 
