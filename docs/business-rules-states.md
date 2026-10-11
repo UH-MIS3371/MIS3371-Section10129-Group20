@@ -9,7 +9,7 @@ Each rule changes whether the transaction is allowed, where it goes, or what hap
 | **BR-1** | A referral cannot be submitted without patient identifier, referring provider, referral date, reason for referral, requested service, and urgency. | Validation | Browser (`required`) for early feedback; application authoritative |
 | **BR-2** | A referral is routed only to the receiving department that offers the requested service. | Routing rule | Browser previews the department; application routes |
 | **BR-3** | A patient cannot have two active referrals (not Rejected, Completed, or Cancelled) for the same service. | Conditional business rule (patient + service together) | Browser checks sample data (Week 7); application checks the database |
-| **BR-4** | A referral that is missing information, or for which the department requests more information, becomes Incomplete and cannot be routed until the provider corrects and resubmits it. | State / workflow rule | Application |
+| **BR-4** | When the receiving department requests more information, the referral becomes Incomplete and cannot be routed again until the provider adds the information and resubmits it. (A submission with blank required fields is blocked by validation under BR-1 and never becomes a referral.) | State / workflow rule | Application |
 | **BR-5** | A referral cannot be rejected without a documented reason, and the reason is visible to the referring provider. | Conditional requirement | Application |
 | **BR-6** | A referral cannot be marked Scheduled unless it is Accepted, and cannot be marked Completed unless it is Scheduled. | State-control rule | Application |
 | **BR-7** | An Urgent referral left Under Review for more than 1 business day, or a Routine referral for more than 3 business days, is flagged as overdue for the referral coordinator. | Timing / escalation rule | Browser shows the review window; application sets `overdueFlag` |
@@ -28,7 +28,7 @@ Browser checks only help the user. The application tier must enforce every rule 
 | State | Meaning | Set By |
 |---|---|---|
 | **Submitted** | Referral passed validation and received a referral ID. | System |
-| **Incomplete** | Missing information or more information requested; returned to the provider. | System / Receiving Dept |
+| **Incomplete** | The receiving department requested more information; returned to the provider. | Receiving Dept |
 | **Under Review** | Routed to the receiving department and awaiting a decision. | System |
 | **Accepted** | Receiving department approved the referral for scheduling. | Receiving Dept |
 | **Rejected** | Receiving department declined the referral; reason recorded. (Final) | Receiving Dept |
@@ -41,7 +41,6 @@ Browser checks only help the user. The application tier must enforce every rule 
 | From | To | When |
 |---|---|---|
 | (new) | Submitted | Valid submission (BR-1, BR-3) |
-| (new) | Incomplete | Required field missing (BR-1) |
 | Incomplete | Submitted | Provider corrects and resubmits |
 | Submitted | Under Review | System routes to department (BR-2) |
 | Under Review | Accepted | Department accepts |
