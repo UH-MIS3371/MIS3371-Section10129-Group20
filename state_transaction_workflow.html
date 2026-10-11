@@ -109,7 +109,7 @@
   <path class="dash" d="M470 497 L494 497"/><text class="ts" x="500" y="497">Cancellation path</text>
 </g>
 </svg>
-<p class="note">A new referral that is missing a required field goes straight to Incomplete. Cancelled is reachable from any non-final state (Submitted, Under Review, Incomplete, or Accepted) when the provider or coordinator withdraws the referral with a reason. Rejected, Cancelled, and Completed are final states.</p>
+<p class="note">A submission with a missing required field is blocked by validation and never becomes a referral, so it has no state. Incomplete only means the receiving department asked for more information. Cancelled is reachable from any non-final state (Submitted, Under Review, Incomplete, or Accepted) when the provider or coordinator withdraws the referral with a reason. Rejected, Cancelled, and Completed are final states.</p>
 </section>
 
 <section class="page">
@@ -120,7 +120,7 @@
     <thead><tr><th style="width:14%">State</th><th style="width:36%">Meaning</th><th style="width:22%">Set by</th><th style="width:28%">Valid next states</th></tr></thead>
     <tbody>
       <tr><td>Submitted</td><td>Referral passed field validation and the duplicate check, and received a referral ID.</td><td>System</td><td>Under Review, Cancelled</td></tr>
-      <tr><td>Incomplete</td><td>Missing required information, or the receiving department asked for more information; returned to the provider.</td><td>System / Receiving Department</td><td>Submitted, Cancelled</td></tr>
+      <tr><td>Incomplete</td><td>The receiving department asked for more information; returned to the provider.</td><td>Receiving Department</td><td>Submitted, Cancelled</td></tr>
       <tr><td>Under Review</td><td>Routed to the receiving department and waiting on a decision.</td><td>System</td><td>Accepted, Rejected, Incomplete, Cancelled</td></tr>
       <tr><td>Accepted</td><td>Receiving department approved the referral for scheduling.</td><td>Receiving Department</td><td>Scheduled, Cancelled</td></tr>
       <tr><td>Rejected</td><td>Receiving department declined the referral; a reason is recorded and visible to the provider. Final.</td><td>Receiving Department</td><td>None (final)</td></tr>
@@ -134,8 +134,7 @@
     <thead><tr><th style="width:30%">From</th><th style="width:16%">To</th><th style="width:54%">When</th></tr></thead>
     <tbody>
       <tr><td>(new)</td><td>Submitted</td><td>Required fields present and no duplicate active referral.</td></tr>
-      <tr><td>(new)</td><td>Incomplete</td><td>A required field is missing.</td></tr>
-      <tr><td>Incomplete</td><td>Submitted</td><td>Provider corrects and resubmits.</td></tr>
+      <tr><td>Incomplete</td><td>Submitted</td><td>Provider adds the requested information and resubmits.</td></tr>
       <tr><td>Submitted</td><td>Under Review</td><td>System routes the referral to the matching department.</td></tr>
       <tr><td>Under Review</td><td>Accepted</td><td>Department accepts the referral.</td></tr>
       <tr><td>Under Review</td><td>Rejected</td><td>Department rejects with a reason.</td></tr>
