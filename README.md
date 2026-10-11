@@ -27,8 +27,8 @@ All demo data is fictional — no real patient information is used.
 MIS3371-Section10129-Group20/
 ├── README.md
 ├── Performance_Tracker.xlsx
-├── state_transaction_workflow.html   (state diagram, workflow, and worksheet)
-├── transaction_workflow.html         (workflow and worksheet only)
+├── state_transaction_workflow.html   (state diagram, state definitions, and transitions)
+├── transaction_workflow.html         (workflow diagram and worksheet)
 ├── docs/
 │   ├── team-charter.md
 │   ├── business-problem-scope.md
