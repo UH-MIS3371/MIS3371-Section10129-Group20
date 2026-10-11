@@ -14,7 +14,7 @@
 ## Transaction Flow
 1. The referring provider fills in the referral form and submits it.
 2. The system checks required fields (BR-1).
-   - If anything is missing, the referral is saved as **Incomplete** and the missing fields are shown to the provider, who corrects and resubmits it.
+   - If anything is missing, the submission is blocked and the missing fields are shown to the provider. This is a validation error, not a status: no referral is created until the provider fixes the fields and submits again.
 3. The system checks for an active referral for the same patient and service (BR-3). If one exists, the submission is blocked and the existing referral ID is shown.
 4. The system assigns a unique referral ID, sets status **Submitted**, and records a timestamp.
 5. The system routes the referral to the department that offers the requested service (BR-2) and sets status **Under Review**.
