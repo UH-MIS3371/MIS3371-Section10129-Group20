@@ -6,7 +6,7 @@ Each requirement is written so another person could later test whether it was me
 | ID | Requirement |
 |---|---|
 | **FR-1** | The system shall allow a referring provider to submit one referral capturing patient identifier, referring provider, referral date, reason for referral, requested service, and urgency (Routine/Urgent). |
-| **FR-2** | The system shall reject a submission with missing required fields, save it as Incomplete, and list the missing fields. |
+| **FR-2** | The system shall block a submission with missing required fields and list the fields the provider must fix. No referral or status is created until the submission is valid. |
 | **FR-3** | The system shall assign each accepted submission a unique referral ID and an initial status of Submitted. |
 | **FR-4** | The system shall route a validated referral to the receiving department mapped to the requested service and set its status to Under Review. |
 | **FR-5** | The system shall allow receiving department staff to accept a referral, reject it with a required reason, or request more information. |
