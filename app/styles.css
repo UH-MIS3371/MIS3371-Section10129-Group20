@@ -36,7 +36,9 @@ body {
     #F4F8FA;
 }
 
-/* HEADER */
+/* ==========================================================
+   HEADER
+   ========================================================== */
 
 header {
   position: relative;
@@ -122,7 +124,9 @@ header p {
   font-size: 0.95rem;
 }
 
-/* MAIN CARD */
+/* ==========================================================
+   MAIN CARD
+   ========================================================== */
 
 main {
   padding: 1.25rem 1.5rem;
@@ -136,7 +140,9 @@ main {
     0 2px 8px rgba(15, 77, 85, 0.025);
 }
 
-/* SECTION HEADINGS */
+/* ==========================================================
+   SECTION HEADINGS
+   ========================================================== */
 
 section h2 {
   margin: 0.75rem 0 0.55rem;
@@ -161,7 +167,9 @@ section p {
   margin: 0.4rem 0 0.8rem;
 }
 
-/* REFERRAL INFORMATION CARD */
+/* ==========================================================
+   REFERRAL INFORMATION CARD
+   ========================================================== */
 
 fieldset {
   display: grid;
@@ -194,7 +202,9 @@ legend::before {
   display: none;
 }
 
-/* FORM FIELDS */
+/* ==========================================================
+   FORM FIELDS
+   ========================================================== */
 
 .field,
 .field--half {
@@ -222,7 +232,9 @@ label {
   font-weight: 600;
 }
 
-/* INPUTS */
+/* ==========================================================
+   INPUTS
+   ========================================================== */
 
 input[type="text"],
 input[type="date"],
@@ -416,13 +428,13 @@ label[for="referralReason"]::before {
 }
 
 /* ==========================================================
-   ADDITIONAL INFORMATION — CORRECTED GRID ALIGNMENT
+   ADDITIONAL INFORMATION — FULL WIDTH AND ALIGNED
    ========================================================== */
 
 /*
-   The heading belongs to the fieldset grid.
-   Both fields remain complete wrappers.
-   This prevents label/input misalignment.
+   The heading is a separate fieldset grid item.
+   Urgency and Reason for Referral remain intact
+   and share the same row.
 */
 
 /* Full-width heading */
@@ -480,14 +492,14 @@ fieldset .field:has(#referralReason) {
   padding: 0;
 }
 
-/* Remove previous decorative heading */
+/* Prevent duplicate heading */
 
 fieldset .field:has(#urgency)::before {
   content: none;
   display: none;
 }
 
-/* Match label height and spacing */
+/* Align labels */
 
 fieldset .field:has(#urgency) label,
 fieldset .field:has(#referralReason) label {
@@ -497,7 +509,7 @@ fieldset .field:has(#referralReason) label {
   line-height: 22px;
 }
 
-/* Match input starting positions */
+/* Align inputs */
 
 fieldset #urgency {
   display: block;
@@ -512,7 +524,9 @@ fieldset #referralReason {
   margin: 0;
 }
 
-/* FORM ACTIONS */
+/* ==========================================================
+   FORM ACTIONS
+   ========================================================== */
 
 .form-actions {
   margin-top: 0.25rem;
@@ -526,7 +540,9 @@ fieldset #referralReason {
     0 3px 12px rgba(15, 77, 85, 0.04);
 }
 
-/* SUBMIT BUTTON */
+/* ==========================================================
+   SUBMIT BUTTON
+   ========================================================== */
 
 button[type="submit"] {
   display: block;
@@ -574,7 +590,9 @@ button[type="submit"]:active {
   background: #0B4F49;
 }
 
-/* ACCESSIBILITY */
+/* ==========================================================
+   ACCESSIBILITY
+   ========================================================== */
 
 input:focus-visible,
 select:focus-visible,
@@ -584,7 +602,9 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* VALIDATION MESSAGES */
+/* ==========================================================
+   VALIDATION MESSAGES
+   ========================================================== */
 
 .message {
   display: block;
@@ -594,6 +614,7 @@ button:focus-visible {
   font-size: 0.95rem;
   line-height: 1.5;
   border-radius: 10px;
+
   overflow-wrap: anywhere;
 }
 
@@ -601,33 +622,58 @@ button:focus-visible {
   display: none;
 }
 
+/* Error message */
+
 .message--error {
   color: #B91C1C;
   background: #FEF2F2;
+
   border: 1px solid #FECACA;
   border-left: 4px solid #B91C1C;
+
   font-weight: 600;
 }
+
+/* Success message */
 
 .message--success {
   color: #15803D;
   background: #F0FDF4;
+
   border: 1px solid #BBF7D0;
   border-left: 4px solid #15803D;
+
   font-weight: 600;
 }
 
+/* ==========================================================
+   MUTED STEEL BLUE INFORMATION MESSAGES
+   ========================================================== */
+
 .message--info {
-  color: #1D4ED8;
-  background: #EFF6FF;
-  border: 1px solid #BFDBFE;
-  border-left: 4px solid #2563EB;
+  color: #24566B;
+  background: #E9F1F4;
+
+  border: 1px solid #C7DDE3;
+  border-left: 4px solid #39778A;
+  border-radius: 10px;
+
+  padding: 0.75rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.5;
+
+  box-shadow:
+    0 3px 10px rgba(36, 86, 107, 0.06);
 }
+
+/* Urgent message */
 
 .message--urgent,
 .urgent {
   color: #B45309;
   background: #FFFBEB;
+
   border: 1px solid #FDE68A;
   border-left: 4px solid #B45309;
   border-radius: 10px;
@@ -637,7 +683,9 @@ button:focus-visible {
   margin-top: 0.75rem;
 }
 
-/* FOOTER */
+/* ==========================================================
+   FOOTER
+   ========================================================== */
 
 footer {
   margin-top: 1rem;
@@ -736,7 +784,9 @@ footer {
   }
 }
 
-/* REDUCED MOTION */
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
 
 @media (prefers-reduced-motion: reduce) {
   button[type="submit"],
