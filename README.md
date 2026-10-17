@@ -27,8 +27,6 @@ All demo data is fictional — no real patient information is used.
 TPS_3371_TEAM_20/
 ├── README.md
 ├── Performance_Tracker.xlsx
-├── state_transaction_workflow.html   (state diagram, state definitions, and transitions)
-├── transaction_workflow.html         (workflow diagram and worksheet)
 ├── docs/
 │   ├── team-charter.md
 │   ├── business-problem-scope.md
@@ -41,7 +39,9 @@ TPS_3371_TEAM_20/
 │   ├── week8-testing.md              (backend rules and test results)
 │   └── data-dictionary.html
 ├── diagrams/
-│   └── architecture-v1.html          (three tiers + responsibility notes)
+│   ├── architecture-v1.html          (three tiers + responsibility notes)
+│   ├── state_transaction_workflow.html (state diagram, state definitions, and transitions)
+│   └── transaction_workflow.html     (workflow diagram and worksheet)
 ├── app/
 │   ├── index.html                    (referral form)
 │   ├── styles.css
