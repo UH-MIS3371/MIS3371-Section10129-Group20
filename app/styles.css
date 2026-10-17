@@ -5,77 +5,214 @@
 
 /* ---------- Base / page container ---------- */
 
+
 * {
   box-sizing: border-box;
 }
 
-body {
-  margin: 0 auto;
-  max-width: 680px;
-  padding: 1.5rem 1.25rem 3rem;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  font-size: 1rem;
-  line-height: 1.5;
-  color: #1a1a1a;
-  background-color: #fafafa;
+html {
+  width: 100%;
+  background: #F4F8FA;
 }
 
-/* ---------- Heading / label hierarchy ---------- */
+body {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 18px 24px 22px;
+
+  font-family: system-ui, -apple-system,
+    "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: #1E293B;
+
+  background:
+    radial-gradient(
+      circle at top right,
+      rgba(45, 185, 177, 0.07),
+      transparent 40%
+    ),
+    #F4F8FA;
+}
+
+/* ==========================================================
+   HEADER
+   ========================================================== */
+
+header {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+
+  padding: 1.3rem 2rem 1.3rem 6rem;
+  margin-bottom: 0.8rem;
+
+  color: #FFFFFF;
+  background: linear-gradient(
+    115deg,
+    #064E56 0%,
+    #0F766E 55%,
+    #2CB9B1 100%
+  );
+
+  border-radius: 18px;
+
+  box-shadow:
+    0 8px 22px rgba(6, 78, 86, 0.13),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Medical cross */
+
+header::before {
+  content: "+";
+  position: absolute;
+  left: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 3.5rem;
+  height: 3.5rem;
+
+  color: #FFFFFF;
+  font-family: Arial, sans-serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+
+  background: rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+}
+
+/* Decorative header wave */
+
+header::after {
+  content: "";
+  position: absolute;
+  right: -90px;
+  bottom: -95px;
+
+  width: 340px;
+  height: 150px;
+
+  border: 24px solid rgba(255, 255, 255, 0.12);
+  border-radius: 50%;
+
+  pointer-events: none;
+  z-index: -1;
+}
 
 header h1 {
+  position: relative;
+  margin: 0 0 0.25rem;
+
+  color: #FFFFFF;
   font-size: 1.6rem;
-  margin: 0 0 0.35rem;
+  line-height: 1.3;
 }
 
 header p {
-  margin: 0 0 1.5rem;
-  color: #444;
+  position: relative;
+  margin: 0;
+
+  color: #E0F2F1;
+  font-size: 0.95rem;
 }
 
+/* ==========================================================
+   MAIN CARD
+   ========================================================== */
+
+main {
+  padding: 1.25rem 1.5rem;
+
+  background: #FFFFFF;
+  border: 1px solid #E8EFF2;
+  border-radius: 20px;
+
+  box-shadow:
+    0 12px 35px rgba(15, 77, 85, 0.06),
+    0 2px 8px rgba(15, 77, 85, 0.025);
+}
+
+/* ==========================================================
+   SECTION HEADINGS
+   ========================================================== */
+
 section h2 {
-  font-size: 1.2rem;
-  margin: 2rem 0 0.75rem;
-  padding-bottom: 0.35rem;
-  border-bottom: 2px solid #ccd6e0;
-  color: #1a1a1a;
+  margin: 0.75rem 0 0.55rem;
+  padding: 0.5rem 0.8rem;
+
+  color: #0F766E;
+  background: #EAF7F6;
+
+  border-left: 4px solid #0F766E;
+  border-bottom: 2px solid #C9E7E2;
+  border-radius: 10px;
+
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
 section:first-of-type h2 {
   margin-top: 0;
 }
 
-legend {
-  font-weight: 700;
-  font-size: 1.05rem;
-  padding: 0 0.35rem;
+section p {
+  margin: 0.4rem 0 0.8rem;
 }
 
-label {
-  display: block;
-  font-weight: 600;
-  margin-bottom: 0.35rem;
-}
-
-/* ---------- Form structure ---------- */
+/* ==========================================================
+   REFERRAL INFORMATION CARD
+   ========================================================== */
 
 fieldset {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 1.25rem;
-  margin: 0 0 1.5rem;
-  background-color: #fff;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  column-gap: 1.25rem;
+  row-gap: 0.85rem;
+
+  min-width: 0;
+  padding: 1.2rem;
+  margin: 0 0 0.8rem;
+
+  background: #FFFFFF;
+  border: 1px solid #E6EDF0;
+  border-radius: 16px;
+
+  box-shadow:
+    0 4px 18px rgba(15, 77, 85, 0.035);
 }
 
-/* .field wraps one label + one control; replaces repeated <br><br> spacing. */
-.field {
-  margin-bottom: 1.25rem;
+legend {
+  padding: 0 0.35rem;
+
+  color: #0F766E;
+  font-size: 1.05rem;
+  font-weight: 700;
 }
 
-.field:last-child {
+legend::before {
+  content: none;
+  display: none;
+}
+
+/* ==========================================================
+   FORM FIELDS
+   ========================================================== */
+
+.field,
+.field--half {
+  grid-column: auto;
+  min-width: 0;
   margin-bottom: 0;
 }
 
-/* Checkbox fields read label beside control, not stacked above it. */
 .field--checkbox {
   display: flex;
   align-items: center;
@@ -87,95 +224,579 @@ fieldset {
   font-weight: 400;
 }
 
-.form-actions {
-  margin-top: 0.5rem;
+label {
+  display: block;
+  margin-bottom: 0.35rem;
+
+  color: #1E293B;
+  font-weight: 600;
 }
 
-/* ---------- Inputs, selects, textareas ---------- */
+/* ==========================================================
+   INPUTS
+   ========================================================== */
 
 input[type="text"],
 input[type="date"],
 input[type="number"],
 select,
 textarea {
+  display: block;
   width: 100%;
-  padding: 0.6rem 0.75rem;
+  min-width: 0;
+
+  padding: 0.65rem 0.8rem;
+
+  color: #1E293B;
+  background: #FAFCFD;
+
+  border: 1px solid #DCE7EA;
+  border-radius: 10px;
+
   font: inherit;
-  color: inherit;
-  border: 1px solid #999;
-  border-radius: 6px;
-  background-color: #fff;
+
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+input[type="text"]:hover,
+input[type="date"]:hover,
+input[type="number"]:hover,
+select:hover,
+textarea:hover {
+  border-color: #0F766E;
+}
+
+input[type="text"]:focus,
+input[type="date"]:focus,
+input[type="number"]:focus,
+select:focus,
+textarea:focus {
+  background: #FFFFFF;
+  border-color: #0F766E;
+
+  box-shadow:
+    0 0 0 4px rgba(15, 118, 110, 0.11);
 }
 
 textarea {
+  min-height: 5rem;
   resize: vertical;
-  min-height: 6rem;
 }
 
 input[type="checkbox"] {
   width: 1.15rem;
   height: 1.15rem;
+  accent-color: #0F766E;
 }
 
-/* ---------- Button ---------- */
+::placeholder {
+  color: #64748B;
+}
+
+/* ==========================================================
+   MEDICAL FIELD ICONS
+   ========================================================== */
+
+label[for="patientId"]::before,
+label[for="referringProviderId"]::before,
+label[for="referralDate"]::before,
+label[for="requestedService"]::before,
+label[for="urgency"]::before,
+label[for="referralReason"]::before {
+  content: "";
+  display: inline-block;
+  width: 22px;
+  height: 22px;
+  margin-right: 8px;
+  vertical-align: -5px;
+  box-sizing: border-box;
+}
+
+/* Patient ID — identification card */
+
+label[for="patientId"]::before {
+  width: 24px;
+  height: 18px;
+  vertical-align: -3px;
+
+  border: 2px solid #0F766E;
+  border-radius: 3px;
+
+  background:
+    radial-gradient(circle, #0F766E 2px, transparent 2.5px)
+      3px 3px / 6px 6px no-repeat,
+    linear-gradient(#0F766E, #0F766E)
+      3px 11px / 7px 2px no-repeat,
+    linear-gradient(#0F766E, #0F766E)
+      13px 5px / 7px 2px no-repeat,
+    linear-gradient(#0F766E, #0F766E)
+      13px 10px / 7px 2px no-repeat;
+}
+
+/* Referring Provider — stethoscope */
+
+label[for="referringProviderId"]::before {
+  width: 20px;
+  height: 20px;
+  vertical-align: -4px;
+
+  border: none;
+  border-radius: 0;
+  background: #0F766E;
+
+  -webkit-mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3v5a6 6 0 0 0 12 0V3'/%3E%3Cpath d='M6 3H4M18 3h2M12 14v3a4 4 0 0 0 8 0v-2'/%3E%3Ccircle cx='20' cy='13' r='2'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+
+  mask:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 3v5a6 6 0 0 0 12 0V3'/%3E%3Cpath d='M6 3H4M18 3h2M12 14v3a4 4 0 0 0 8 0v-2'/%3E%3Ccircle cx='20' cy='13' r='2'/%3E%3C/svg%3E")
+    center / contain no-repeat;
+}
+
+/* Referral Date — calendar */
+
+label[for="referralDate"]::before {
+  width: 22px;
+  height: 21px;
+
+  border: 2px solid #0F766E;
+  border-radius: 3px;
+
+  background:
+    linear-gradient(#0F766E, #0F766E)
+      0 4px / 100% 2px no-repeat,
+    radial-gradient(circle, #0F766E 1.5px, transparent 2px)
+      4px 10px / 5px 5px no-repeat,
+    radial-gradient(circle, #0F766E 1.5px, transparent 2px)
+      11px 10px / 5px 5px no-repeat;
+}
+
+/* Requested Service — medical cross */
+
+label[for="requestedService"]::before {
+  content: "+";
+  width: 22px;
+  height: 22px;
+
+  color: #0F766E;
+  font-size: 25px;
+  font-weight: 700;
+  line-height: 20px;
+  text-align: center;
+
+  border: none;
+  background: none;
+}
+
+/* Urgency — alert icon */
+
+label[for="urgency"]::before {
+  content: "!";
+  width: 20px;
+  height: 20px;
+
+  color: #B45309;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+
+  border: 2px solid #B45309;
+  border-radius: 50%;
+  background: none;
+}
+
+/* Reason for Referral — document */
+
+label[for="referralReason"]::before {
+  width: 19px;
+  height: 22px;
+
+  border: 2px solid #0F766E;
+  border-radius: 2px;
+
+  background:
+    linear-gradient(#0F766E, #0F766E)
+      center 5px / 11px 2px no-repeat,
+    linear-gradient(#0F766E, #0F766E)
+      center 10px / 11px 2px no-repeat,
+    linear-gradient(#0F766E, #0F766E)
+      center 15px / 11px 2px no-repeat;
+}
+
+/* ==========================================================
+   ADDITIONAL INFORMATION — FULL WIDTH AND ALIGNED
+   ========================================================== */
+
+/*
+   The heading is a separate fieldset grid item.
+   Urgency and Reason for Referral remain intact
+   and share the same row.
+*/
+
+/* Full-width heading */
+
+fieldset:has(#urgency)::before {
+  content: "Additional Information";
+
+  display: block;
+  grid-column: 1 / -1;
+  grid-row: 3;
+
+  width: 100%;
+  margin: 0;
+  padding: 0.55rem 0.8rem;
+
+  color: #0F766E;
+  background: #EAF7F6;
+
+  border-left: 4px solid #0F766E;
+  border-bottom: 2px solid #C9E7E2;
+  border-radius: 10px;
+
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+/* Urgency */
+
+fieldset .field:has(#urgency) {
+  display: flex;
+  flex-direction: column;
+
+  grid-column: 1 / 2;
+  grid-row: 4;
+
+  position: static;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Reason for Referral */
+
+fieldset .field:has(#referralReason) {
+  display: flex;
+  flex-direction: column;
+
+  grid-column: 2 / 4;
+  grid-row: 4;
+
+  position: static;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Prevent duplicate heading */
+
+fieldset .field:has(#urgency)::before {
+  content: none;
+  display: none;
+}
+
+/* Align labels */
+
+fieldset .field:has(#urgency) label,
+fieldset .field:has(#referralReason) label {
+  display: block;
+  margin: 0 0 0.35rem;
+  padding: 0;
+  line-height: 22px;
+}
+
+/* Align inputs */
+
+fieldset #urgency {
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
+fieldset #referralReason {
+  display: block;
+  width: 100%;
+  min-height: 5rem;
+  margin: 0;
+}
+
+/* ==========================================================
+   FORM ACTIONS
+   ========================================================== */
+
+.form-actions {
+  margin-top: 0.25rem;
+  padding: 0.8rem;
+
+  background: #FFFFFF;
+  border: 1px solid #E6EDF0;
+  border-radius: 14px;
+
+  box-shadow:
+    0 3px 12px rgba(15, 77, 85, 0.04);
+}
+
+/* ==========================================================
+   SUBMIT BUTTON
+   ========================================================== */
 
 button[type="submit"] {
-  display: inline-block;
+  display: block;
   width: 100%;
-  padding: 0.75rem 1.5rem;
+  padding: 0.8rem 1rem;
+
+  color: #FFFFFF;
+
+  background: linear-gradient(
+    100deg,
+    #0F766E 0%,
+    #087F8C 100%
+  );
+
+  border: none;
+  border-radius: 10px;
+
   font: inherit;
   font-weight: 600;
-  color: #fff;
-  background-color: #0b5fff;
-  border: none;
-  border-radius: 6px;
   cursor: pointer;
+
+  box-shadow:
+    0 5px 14px rgba(15, 118, 110, 0.16);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 button[type="submit"]:hover {
-  background-color: #0949c7;
+  background: linear-gradient(
+    100deg,
+    #115E59 0%,
+    #0F766E 100%
+  );
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 18px rgba(15, 118, 110, 0.22);
 }
 
 button[type="submit"]:active {
-  background-color: #073a9e;
+  transform: translateY(0);
+  background: #0B4F49;
 }
 
-/* ---------- Keyboard focus (do not remove) ---------- */
+/* ==========================================================
+   ACCESSIBILITY
+   ========================================================== */
 
-input:focus,
-select:focus,
-textarea:focus,
-button:focus {
-  outline: 3px solid #0b5fff;
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 3px solid #0F766E;
   outline-offset: 2px;
 }
 
-/* ---------- Footer ---------- */
+/* ==========================================================
+   VALIDATION MESSAGES
+   ========================================================== */
 
-footer {
-  margin-top: 2.5rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ddd;
-  font-size: 0.85rem;
-  color: #666;
+.message {
+  display: block;
+  margin: 0.4rem 0 0;
+  padding: 0.65rem 0.75rem;
+
+  font-size: 0.95rem;
+  line-height: 1.5;
+  border-radius: 10px;
+
+  overflow-wrap: anywhere;
 }
 
-/* ---------- Responsive ---------- */
+.message:empty {
+  display: none;
+}
 
-@media (max-width: 600px) {
+/* Error message */
+
+.message--error {
+  color: #B91C1C;
+  background: #FEF2F2;
+
+  border: 1px solid #FECACA;
+  border-left: 4px solid #B91C1C;
+
+  font-weight: 600;
+}
+
+/* Success message */
+
+.message--success {
+  color: #15803D;
+  background: #F0FDF4;
+
+  border: 1px solid #BBF7D0;
+  border-left: 4px solid #15803D;
+
+  font-weight: 600;
+}
+
+/* ==========================================================
+   MUTED STEEL BLUE INFORMATION MESSAGES
+   ========================================================== */
+
+.message--info {
+  color: #24566B;
+  background: #E9F1F4;
+
+  border: 1px solid #C7DDE3;
+  border-left: 4px solid #39778A;
+  border-radius: 10px;
+
+  padding: 0.75rem 0.9rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  line-height: 1.5;
+
+  box-shadow:
+    0 3px 10px rgba(36, 86, 107, 0.06);
+}
+
+/* Urgent message */
+
+.message--urgent,
+.urgent {
+  color: #B45309;
+  background: #FFFBEB;
+
+  border: 1px solid #FDE68A;
+  border-left: 4px solid #B45309;
+  border-radius: 10px;
+}
+
+.form-actions .message {
+  margin-top: 0.75rem;
+}
+
+/* ==========================================================
+   FOOTER
+   ========================================================== */
+
+footer {
+  margin-top: 1rem;
+  padding-top: 0.5rem;
+
+  color: #64748B;
+  border-top: 1px solid #E2E8F0;
+
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ==========================================================
+   RESPONSIVE DESIGN
+   ========================================================== */
+
+/* Tablet */
+
+@media (max-width: 900px) {
   body {
-    padding: 1rem 1rem 2rem;
+    padding: 1rem;
   }
 
   fieldset {
-    padding: 1rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  fieldset:has(#urgency)::before {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  fieldset .field:has(#urgency) {
+    grid-column: 1 / 2;
+    grid-row: 4;
+  }
+
+  fieldset .field:has(#referralReason) {
+    grid-column: 2 / 3;
+    grid-row: 4;
+  }
+}
+
+/* Mobile */
+
+@media (max-width: 600px) {
+  body {
+    padding: 0.75rem;
+  }
+
+  header {
+    padding: 1.25rem 1rem 1.25rem 5rem;
+  }
+
+  header::before {
+    left: 0.8rem;
+    width: 3.3rem;
+    height: 3.3rem;
+    font-size: 3rem;
+  }
+
+  header::after {
+    width: 200px;
+    height: 100px;
+    right: -80px;
+    bottom: -65px;
   }
 
   header h1 {
     font-size: 1.4rem;
   }
 
-  button[type="submit"] {
-    width: 100%;
+  main {
+    padding: 1rem;
+  }
+
+  fieldset {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  fieldset .field,
+  fieldset .field--half {
+    grid-column: 1 / -1;
+  }
+
+  fieldset:has(#urgency)::before {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+
+  fieldset .field:has(#urgency),
+  fieldset .field:has(#referralReason) {
+    grid-column: 1 / -1;
+    grid-row: auto;
+  }
+}
+
+/* ==========================================================
+   REDUCED MOTION
+   ========================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  button[type="submit"],
+  input,
+  select,
+  textarea {
+    transition: none;
+  }
+
+  button[type="submit"]:hover {
+    transform: none;
   }
 }

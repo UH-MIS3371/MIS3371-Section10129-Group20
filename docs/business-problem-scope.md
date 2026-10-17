@@ -23,7 +23,7 @@ There is no single place where a referring provider can submit a patient referra
 ## In Scope
 Our one transaction is **Submit a Patient Referral** and the tracking of that one referral:
 
-- Submit one referral for a patient to a specific service (patient identifier, reason, requested service, urgency, referring provider).
+- Submit one referral for a patient to a specific service (patient identifier, referring provider, referral date, reason, requested service, urgency).
 - Validate required fields and block a duplicate active referral for the same patient and service.
 - Assign a unique referral ID and route the referral to the department that offers the requested service.
 - Let the receiving department accept, reject with a reason, or request more information.
