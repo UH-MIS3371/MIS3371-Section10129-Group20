@@ -29,10 +29,16 @@ const SERVICE_DEPARTMENTS = {
 // BR-3 demo data: referrals that are already active (not Rejected,
 // Completed, or Cancelled). There is no database yet, so this small
 // fictional list stands in for it. Week 10 replaces it with DynamoDB.
+// A referral that passes the browser checks is added here, so submitting
+// the same patient + service again in the same session is blocked.
 const SAMPLE_ACTIVE_REFERRALS = [
   { referralId: "REF-2026-004821", patientId: "PAT-88213", requestedService: "cardiology" },
   { referralId: "REF-2026-004905", patientId: "PAT-10452", requestedService: "orthopedics" }
 ];
+
+// Demo referral IDs continue after the sample data. Real IDs come from the
+// application tier later, so this number resets when the page reloads.
+let nextReferralNumber = 4906;
 
 
 // ---------------------------------------------------------
@@ -44,6 +50,7 @@ const patientIdInput = document.querySelector("#patientId");
 const referralDateInput = document.querySelector("#referralDate");
 const serviceSelect = document.querySelector("#requestedService");
 const urgencySelect = document.querySelector("#urgency");
+const reasonInput = document.querySelector("#referralReason");
 
 const dateMessage = document.querySelector("#dateMessage");
 const duplicateMessage = document.querySelector("#duplicateMessage");
@@ -97,6 +104,16 @@ function requiresPriorityRouting(urgencyValue) {
 // BR-9: true when the referral date is today or earlier.
 function referralDateSatisfied(dateString) {
   return !isFutureDate(dateString);
+}
+
+// BR-1: the reason must contain real text. The native `required` attribute
+// accepts a value made only of spaces, so the trimmed text is checked too.
+// maxlength only limits typing, so the 500-character cap is checked here too.
+const REASON_MAX_LENGTH = 500;
+
+function reasonSatisfied(reasonText) {
+  const trimmed = reasonText.trim();
+  return trimmed !== "" && trimmed.length <= REASON_MAX_LENGTH;
 }
 
 // BR-3: true when there is NO active referral for this patient + service.
@@ -240,6 +257,15 @@ function handleSubmit(event) {
     return;
   }
 
+  // BR-1: the reason cannot be blank or only spaces.
+  if (!reasonSatisfied(reasonInput.value)) {
+    showMessage(formMessage,
+      "Cannot submit: enter a reason for the referral (1 to 500 characters).",
+      "error");
+    reasonInput.focus();
+    return;
+  }
+
   // BR-3: conditional business rule using two fields together.
   if (!duplicateRuleSatisfied(patientId, serviceValue)) {
     const duplicate = findActiveDuplicate(patientId, serviceValue);
@@ -257,9 +283,26 @@ function handleSubmit(event) {
     ? "1 business day"
     : "3 business days";
 
+  // Demo referral ID, then remember the referral so BR-3 applies to it.
+  const referralId = "REF-2026-" + String(nextReferralNumber).padStart(6, "0");
+  nextReferralNumber += 1;
+  SAMPLE_ACTIVE_REFERRALS.push({
+    referralId: referralId,
+    patientId: patientId,
+    requestedService: serviceValue
+  });
+
+  // Clear the form and its live messages for the next referral.
+  form.reset();
+  showMessage(dateMessage, "", "");
+  showMessage(departmentMessage, "", "");
+  showMessage(duplicateMessage, "", "");
+  showMessage(routingMessage, "", "");
+
   showMessage(formMessage,
-    "Client-side checks passed. This referral would be routed to " +
-      department + " for review within " + reviewWindow + ".",
+    "Client-side checks passed. Demo referral " + referralId +
+      " would be routed to " + department + " for review within " +
+      reviewWindow + ". Nothing is saved yet.",
     "success");
 }
 
@@ -269,7 +312,13 @@ function handleSubmit(event) {
 // ---------------------------------------------------------
 
 // BR-9 native constraint: the date picker will not allow future dates.
-referralDateInput.max = getTodayString();
+// The max is refreshed whenever the date field is used, so a page left
+// open past midnight does not keep yesterday's limit.
+function refreshDateLimit() {
+  referralDateInput.max = getTodayString();
+}
+refreshDateLimit();
+referralDateInput.addEventListener("focus", refreshDateLimit);
 
 patientIdInput.addEventListener("input", handlePatientInput);
 referralDateInput.addEventListener("change", handleDateChange);

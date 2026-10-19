@@ -6,7 +6,9 @@
 /* ---------- Base / page container ---------- */
 
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -772,15 +774,21 @@ footer {
     grid-column: 1 / -1;
   }
 
+  /* One column: place the heading after the first four fields,
+     then Urgency and Reason. The other fields auto-place above. */
   fieldset:has(#urgency)::before {
     grid-column: 1 / -1;
-    grid-row: auto;
+    grid-row: 5;
   }
 
-  fieldset .field:has(#urgency),
+  fieldset .field:has(#urgency) {
+    grid-column: 1 / -1;
+    grid-row: 6;
+  }
+
   fieldset .field:has(#referralReason) {
     grid-column: 1 / -1;
-    grid-row: auto;
+    grid-row: 7;
   }
 }
 
