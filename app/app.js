@@ -1,5 +1,6 @@
 // MIS 3371 - Team 20 - Patient Referral Management System
 // Week 7: browser-side validation and business-rule behavior.
+// Week 10: a valid referral is sent to the AWS API (POST /referrals).
 //
 // Rules shown in the browser:
 //   BR-2  Route only to the department that offers the requested service
@@ -36,9 +37,9 @@ const SAMPLE_ACTIVE_REFERRALS = [
   { referralId: "REF-2026-004905", patientId: "PAT-10452", requestedService: "orthopedics" }
 ];
 
-// Demo referral IDs continue after the sample data. Real IDs come from the
-// application tier later, so this number resets when the page reloads.
-let nextReferralNumber = 4906;
+// Week 10: the API Gateway invoke URL plus our route.
+// Replace the address with YOUR API's invoke URL from API Gateway.
+const API_URL = "https://722iiz2wzk.execute-api.us-east-1.amazonaws.com/api/expenses";
 
 
 // ---------------------------------------------------------
@@ -57,6 +58,7 @@ const duplicateMessage = document.querySelector("#duplicateMessage");
 const routingMessage = document.querySelector("#routingMessage");
 const formMessage = document.querySelector("#formMessage");
 const departmentMessage = document.querySelector("#departmentMessage");
+const submitButton = form.querySelector('button[type="submit"]');
 
 
 // ---------------------------------------------------------
@@ -239,8 +241,8 @@ function handleUrgencyChange() {
   clearFormMessage();
 }
 
-function handleSubmit(event) {
-  // No backend yet, so stay on the page for the Week 7 demo.
+async function handleSubmit(event) {
+  // Stay on the page; JavaScript sends the referral to the API instead.
   // The browser has already checked required fields and patterns
   // before this function runs.
   event.preventDefault();
@@ -277,33 +279,67 @@ function handleSubmit(event) {
     return;
   }
 
-  // All browser-side checks passed.
-  const department = getReceivingDepartment(serviceValue);
-  const reviewWindow = requiresPriorityRouting(urgencySelect.value)
-    ? "1 business day"
-    : "3 business days";
-
-  // Demo referral ID, then remember the referral so BR-3 applies to it.
-  const referralId = "REF-2026-" + String(nextReferralNumber).padStart(6, "0");
-  nextReferralNumber += 1;
-  SAMPLE_ACTIVE_REFERRALS.push({
-    referralId: referralId,
+  // The six fields the backend expects (same keys as the data dictionary).
+  const referral = {
     patientId: patientId,
-    requestedService: serviceValue
-  });
+    referringProviderId: form.querySelector("#referringProviderId").value.trim(),
+    referralDate: referralDateInput.value,
+    requestedService: serviceValue,
+    urgency: urgencySelect.value,
+    referralReason: reasonInput.value.trim()
+  };
 
-  // Clear the form and its live messages for the next referral.
-  form.reset();
-  showMessage(dateMessage, "", "");
-  showMessage(departmentMessage, "", "");
-  showMessage(duplicateMessage, "", "");
-  showMessage(routingMessage, "", "");
+  // Reduce accidental repeated clicks while the HTTP request is in flight.
+  submitButton.disabled = true;
+  clearFormMessage();
+  showMessage(formMessage, "Sending referral to the AWS API...", "info");
 
-  showMessage(formMessage,
-    "Client-side checks passed. Demo referral " + referralId +
-      " would be routed to " + department + " for review within " +
-      reviewWindow + ". Nothing is saved yet.",
-    "success");
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(referral)
+    });
+
+    // fetch() gives us a Response object. .json() parses its JSON body.
+    const result = await response.json();
+
+    // The backend (Lambda) is authoritative: show what it decided.
+    if (!response.ok || !result.success) {
+      showMessage(formMessage,
+        "Not accepted: " + (result.message || "the referral was rejected."),
+        "error");
+      return;
+    }
+
+    // Remember the accepted referral so the browser's BR-3 check applies to it.
+    SAMPLE_ACTIVE_REFERRALS.push({
+      referralId: result.referralId,
+      patientId: patientId,
+      requestedService: serviceValue
+    });
+
+    // Clear the form and its live messages for the next referral.
+    form.reset();
+    showMessage(dateMessage, "", "");
+    showMessage(departmentMessage, "", "");
+    showMessage(duplicateMessage, "", "");
+    showMessage(routingMessage, "", "");
+
+    showMessage(formMessage,
+      "Accepted by the API. Referral " + result.referralId +
+        " is routed to " + result.receivingDepartment + " for review within " +
+        result.reviewWindowBusinessDays + " business day(s). Nothing is saved yet.",
+      "success");
+  } catch (error) {
+    // Network problem, wrong URL, or CORS not enabled on the API.
+    console.error("Referral request failed:", error);
+    showMessage(formMessage,
+      "Could not reach the referral API. Check your connection and try again.",
+      "error");
+  } finally {
+    submitButton.disabled = false;
+  }
 }
 
 
