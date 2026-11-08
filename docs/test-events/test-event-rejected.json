@@ -1,0 +1,22 @@
+{
+  "version": "2.0",
+  "routeKey": "POST /referrals",
+  "rawPath": "/referrals",
+  "rawQueryString": "",
+  "headers": {
+    "content-type": "application/json"
+  },
+  "requestContext": {
+    "http": {
+      "method": "POST",
+      "path": "/referrals",
+      "protocol": "HTTP/1.1",
+      "sourceIp": "203.0.113.10",
+      "userAgent": "test"
+    },
+    "routeKey": "POST /referrals",
+    "stage": "$default"
+  },
+  "body": "{\"patientId\": \"PAT-88213\", \"referringProviderId\": \"DR-4410\", \"referralDate\": \"2026-11-02\", \"requestedService\": \"cardiology\", \"urgency\": \"urgent\", \"referralReason\": \"Chest pain on exertion\"}",
+  "isBase64Encoded": false
+}
