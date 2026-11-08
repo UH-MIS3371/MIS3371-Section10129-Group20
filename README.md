@@ -1,7 +1,7 @@
 # TPS_3371_TEAM_20 — Patient Referral Management System
 
 **Course:** MIS 3371 — Capstone Project
-**Current release:** Milestone 2 (client-side system) and Week 8 (local backend)
+**Current release:** Milestone 2 (client-side system), Week 8 (local backend), and Week 10 (Lambda entry point)
 
 ## Project Purpose
 Clinics send patient referrals by phone, fax, paper, and email. Coordinators re-key the details, chase missing information, and decide by hand which department should receive each referral. Referrals get lost, the same patient can be referred twice for the same service, and providers and patients cannot see where a referral stands.
@@ -26,6 +26,7 @@ All demo data is fictional — no real patient information is used.
 ```
 TPS_3371_TEAM_20/
 ├── README.md
+├── index.js                          (AWS Lambda entry point: HTTP adapter for processReferral)
 ├── Performance_Tracker.xlsx
 ├── docs/
 │   ├── team-charter.md
@@ -49,6 +50,9 @@ TPS_3371_TEAM_20/
 ├── backend/
 │   ├── backend.js                    (processReferral: validation, duplicate check, routing)
 │   └── test-backend.js               (21 named test cases, expected vs. actual)
+├── test-events/
+│   ├── test-event-accepted.json      (API Gateway v2 POST /referrals, valid referral)
+│   └── test-event-rejected.json      (API Gateway v2 POST /referrals, BR-3 duplicate)
 └── archive/                          (superseded drafts, kept for history)
 ```
 
@@ -87,6 +91,25 @@ node backend/test-backend.js
 
 21 cases (valid, invalid, boundary, and a forged-field edge case) all pass. See `docs/week8-testing.md` for the rules, the full expected-vs-actual table, and what is not implemented.
 
+## Week 10: AWS Lambda
+
+`index.js` is the Lambda entry point. It is only an HTTP adapter: it reads the method, parses the JSON body, calls `processReferral` once, and returns 200 for `success: true` or 400 for `success: false`. All validation and business rules stay in `backend/backend.js`. Nothing is saved yet (`persisted: false`).
+
+| Setting | Value |
+|---|---|
+| Runtime | Node.js 22.x |
+| Handler | `index.handler` (file `index.js`, export `handler`) |
+| API | API Gateway HTTP API, payload format 2.0 |
+| Route | `POST /referrals` |
+
+The Lambda ZIP holds only `index.js` and `backend/backend.js`, with `index.js` at the top level. From the repository root:
+
+```bash
+zip team20-lambda.zip index.js backend/backend.js
+```
+
+Test it in the Lambda console with the two files in `test-events/`: the accepted event returns 200 and the rejected event (PAT-88213 + cardiology) returns 400 with rule BR-3.
+
 ## Key Distinctions
 - **Workflow vs. state:** the workflow shows actions and decisions ("department reviews referral"); the state shows what is true now ("Under Review").
 - **Validation vs. business rule:** validation asks whether a value is usable (a future referral date is not); a business rule decides what happens because of a value (a duplicate active referral is blocked).
@@ -109,6 +132,8 @@ Pull before starting · one focused branch per task · pull request with one rev
 - [x] Milestone 2 polish: whitespace-only and over-length reason blocked, earliest date limit, demo referral ID, form reset, and repeat submissions blocked
 - [x] Week 8 — Local backend in `backend/`: validation (BR-1, BR-9), duplicate blocking (BR-3), routing (BR-2, BR-7), and 21 passing tests
 - [x] Milestone 2 — Client-side system: form, responsive CSS, JavaScript behavior, validation, business rules, and boundary tests
+- [x] Week 10 — Lambda entry point (`index.js`) for `POST /referrals`, tested with accepted and rejected API Gateway v2 events
+- [ ] Week 10 — Deploy to AWS Lambda and connect the API Gateway HTTP API route
 
 ## Not Implemented Yet
-Connecting the form to the backend (API calls), a web server, AWS, database persistence, and login. The backend enforces BR-1, BR-2, BR-3, BR-7 and BR-9 locally. State changes and roles (BR-4 to BR-6 and BR-8) come in later weeks.
+Connecting the form to the API (fetch calls), database persistence, and login. The backend enforces BR-1, BR-2, BR-3, BR-7 and BR-9 locally. State changes and roles (BR-4 to BR-6 and BR-8) come in later weeks.
