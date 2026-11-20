@@ -1,0 +1,9 @@
+{
+  "version": "2.0",
+  "requestContext": {
+    "http": {
+      "method": "POST"
+    }
+  },
+  "body": "{\"patientId\":\"PAT-12345\",\"referringProviderId\":\"DR-4410\",\"referralDate\":\"2026-11-02\",\"requestedService\":\"cardiology\",\"urgency\":\"urgent\",\"referralReason\":\"Chest pain on exertion\"}"
+}
