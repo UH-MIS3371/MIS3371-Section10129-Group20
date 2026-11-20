@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Submit a Patient Referral</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>Submit a Patient Referral</h1>
+    <p>Submit one patient referral to a requested service.</p>
+  </header>
+
+  <main>
+
+    <section>
+      <h2>Before You Submit</h2>
+      <p>
+        Complete every field below. Use fictional patient and provider
+        information only. No real patient data.
+      </p>
+    </section>
+
+    <section>
+      <h2>Referral Details</h2>
+
+      <!--
+        Field ids and names match the data dictionary exactly
+        (docs/data-dictionary.html). Native HTML constraints handle simple
+        single-field checks. app.js handles rules that need JavaScript
+        (BR-2 department preview, BR-3 duplicate check, BR-7 review window,
+        BR-9 no future referral date).
+      -->
+      <form id="referralForm">
+
+        <fieldset>
+          <legend>Referral Information</legend>
+
+          <!--
+            Each field is a <p> holding its label and control.
+            "field--half" fields sit side by side
+            (laid out in styles.css).
+          -->
+
+          <!-- patientId: String, required, format PAT-00000 -->
+          <p class="field field--half">
+            <label for="patientId">Patient ID</label>
+            <input
+              id="patientId"
+              name="patientId"
+              type="text"
+              placeholder="PAT-00000"
+              pattern="PAT-[0-9]{5}"
+              title="Use the format PAT- followed by 5 digits, for example PAT-88213"
+              required
+            >
+          </p>
+
+          <!-- referringProviderId: String, required, format DR-0000.
+               Typed for now; will come from login in a later week. -->
+          <p class="field field--half">
+            <label for="referringProviderId">Referring Provider ID</label>
+            <input
+              id="referringProviderId"
+              name="referringProviderId"
+              type="text"
+              placeholder="DR-0000"
+              pattern="DR-[0-9]{4}"
+              title="Use the format DR- followed by 4 digits, for example DR-4410"
+              required
+            >
+          </p>
+
+          <!-- referralDate: Date, required, cannot be in the future (BR-9).
+               app.js sets max to today and double-checks on submit. -->
+          <p class="field">
+            <label for="referralDate">Referral Date</label>
+            <input
+              id="referralDate"
+              name="referralDate"
+              type="date"
+              min="2020-12-01"
+              required
+            >
+            <span id="dateMessage" class="message" aria-live="polite"></span>
+          </p>
+
+          <!-- requestedService: Enum. Only services a department offers (BR-2). -->
+          <p class="field field--half">
+            <label for="requestedService">Requested Service</label>
+            <select
+              id="requestedService"
+              name="requestedService"
+              required
+            >
+              <option value="">Choose a service</option>
+              <option value="cardiology">Cardiology</option>
+              <option value="dermatology">Dermatology</option>
+              <option value="orthopedics">Orthopedics</option>
+              <option value="physical-therapy">Physical Therapy</option>
+            </select>
+            <span id="departmentMessage" class="message" aria-live="polite"></span>
+            <span id="duplicateMessage" class="message" aria-live="polite"></span>
+          </p>
+
+          <!-- urgency: Enum (Routine, Urgent). Drives the BR-7 review window. -->
+          <p class="field field--half">
+            <label for="urgency">Urgency</label>
+            <select
+              id="urgency"
+              name="urgency"
+              required
+            >
+              <option value="">Choose an urgency level</option>
+              <option value="routine">Routine</option>
+              <option value="urgent">Urgent</option>
+            </select>
+            <span id="routingMessage" class="message" aria-live="polite"></span>
+          </p>
+
+          <!-- referralReason: Text, required, cannot be blank. -->
+          <p class="field">
+            <label for="referralReason">Reason for Referral</label>
+            <textarea
+              id="referralReason"
+              name="referralReason"
+              rows="4"
+              maxlength="500"
+              placeholder="Describe the symptoms or clinical reason for this referral"
+              required
+            ></textarea>
+          </p>
+
+        </fieldset>
+
+        <p class="form-actions">
+          <button type="submit">Submit Referral</button>
+          <span id="formMessage" class="message" aria-live="polite"></span>
+        </p>
+
+      </form>
+
+      <!-- Week 11: shown only after DynamoDB confirms the save. -->
+      <p id="confirmationPanel" class="confirmation" hidden>
+        <strong>Confirmation Number:</strong>
+        <code id="confirmationNumber"></code>
+      </p>
+    </section>
+
+    <!-- Week 11: look up a saved referral by its confirmation number (GET). -->
+    <section>
+      <h2>View Referral Status</h2>
+      <p>Enter a confirmation number to see the saved referral.</p>
+
+      <form id="statusLookupForm" class="status-form">
+        <p class="field">
+          <label for="statusReferralId">Confirmation Number</label>
+          <input
+            id="statusReferralId"
+            name="statusReferralId"
+            type="text"
+            placeholder="REF-..."
+            autocomplete="off"
+            required
+          >
+        </p>
+
+        <p class="form-actions">
+          <button id="viewStatusButton" type="submit">View Status</button>
+          <span id="statusMessage" class="message" aria-live="polite"></span>
+        </p>
+      </form>
+
+      <!-- Filled from the stored record returned by GET; hidden until found. -->
+      <dl id="statusResult" class="status-result" hidden>
+        <dt>Referral ID</dt>
+        <dd id="viewedReferralId"></dd>
+
+        <dt>Status</dt>
+        <dd id="viewedStatus"></dd>
+
+        <dt>Patient ID</dt>
+        <dd id="viewedPatientId"></dd>
+
+        <dt>Requested Service</dt>
+        <dd id="viewedService"></dd>
+
+        <dt>Receiving Department</dt>
+        <dd id="viewedDepartment"></dd>
+
+        <dt>Urgency</dt>
+        <dd id="viewedUrgency"></dd>
+
+        <dt>Referral Date</dt>
+        <dd id="viewedReferralDate"></dd>
+
+        <dt>Submitted At</dt>
+        <dd id="viewedSubmittedAt"></dd>
+      </dl>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>MIS 3371 - Patient Referral Management System - Team 20</p>
+  </footer>
+
+</body>
+</html>
